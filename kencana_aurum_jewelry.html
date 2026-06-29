@@ -1,0 +1,2684 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kencana Aurum - Premium Gold & Jewelry Boutique</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config for Royal Maroon & Gold Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        maroon: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e9',
+                            200: '#f7ccd5',
+                            300: '#f0a3b3',
+                            400: '#e47189',
+                            500: '#d14362',
+                            600: '#ba294c',
+                            700: '#9b1c3b',
+                            800: '#800020', // Royal Maroon
+                            900: '#6d051e',
+                            950: '#3e000c',
+                        },
+                        gold: {
+                            50: '#fdfbeb',
+                            100: '#fbf5e6',
+                            200: '#f5e4bd',
+                            300: '#eed08c',
+                            400: '#e5b65b',
+                            500: '#db9d34', // Luxurious Gold
+                            600: '#c58125',
+                            700: '#a3611f',
+                            800: '#8a4f16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #800020;
+        }
+    </style>
+</head>
+<body class="font-sans bg-stone-50 text-stone-800 antialiased overflow-x-hidden min-h-screen flex flex-col pb-16 md:pb-0">
+
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full"></div>
+
+    <!-- SIMULATOR CONTROL HUB (PERSISTENT TOP CONTROL) -->
+    <div class="bg-stone-900 border-b border-stone-800 text-stone-300 py-2.5 px-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span class="font-semibold text-stone-400">Simulator Sistem Toko Emas:</span>
+                <span class="bg-stone-850 text-gold-400 px-2.5 py-0.5 rounded font-mono font-bold" id="current-user-tag">Pelanggan Aktif</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-stone-400 font-medium font-serif">Pilih Modul:</span>
+                <button onclick="switchRole('buyer')" class="px-3 py-1 rounded bg-maroon-800 hover:bg-maroon-700 text-white font-bold transition-all flex items-center gap-1 shadow-sm" id="btn-role-buyer">
+                    <i data-lucide="gem" class="w-3.5 h-3.5"></i> Pelanggan
+                </button>
+                <button onclick="switchRole('staff')" class="px-3 py-1 rounded bg-stone-850 hover:bg-stone-750 hover:text-white font-bold text-stone-300 transition-all flex items-center gap-1" id="btn-role-staff">
+                    <i data-lucide="users" class="w-3.5 h-3.5"></i> Staff Toko
+                </button>
+                <button onclick="switchRole('admin')" class="px-3 py-1 rounded bg-stone-850 hover:bg-stone-750 hover:text-white font-bold text-stone-300 transition-all flex items-center gap-1" id="btn-role-admin">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-white/95 backdrop-blur-md border-b border-stone-200/80 sticky top-11 z-40 shadow-sm" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" onclick="switchTab('buyer-store')" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-maroon-900 to-maroon-750 flex items-center justify-center text-gold-400 font-serif font-bold text-2xl transition-transform group-hover:rotate-3 duration-300 shadow">
+                    K
+                </div>
+                <div>
+                    <span class="font-serif text-xl font-bold tracking-tight text-stone-900 group-hover:text-maroon-850 transition-colors">
+                        Kencana<span class="text-maroon-800 font-sans font-light">Aurum</span>
+                    </span>
+                    <span class="block text-[8px] uppercase tracking-widest text-gold-600 font-extrabold -mt-1">Gold & Jewelry Boutique</span>
+                </div>
+            </a>
+
+            <!-- Search Bar (Only shown in Buyer/Customer mode) -->
+            <div class="hidden md:flex flex-grow max-w-sm mx-6" id="header-search-bar">
+                <div class="relative w-full">
+                    <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Cari kalung, cincin, logam mulia..." class="w-full px-4 py-2 pl-10 rounded-xl bg-stone-100 border-none outline-none focus:ring-2 focus:ring-maroon-800/20 text-xs transition-all text-stone-850 font-medium">
+                    <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-3"></i>
+                </div>
+            </div>
+
+            <!-- Dynamic Header Controls -->
+            <div class="flex items-center gap-4">
+                <!-- Customer Controls -->
+                <div class="flex items-center gap-3" id="buyer-header-controls">
+                    <button onclick="openCart()" class="p-2.5 rounded-xl hover:bg-stone-150 text-stone-700 relative transition-colors">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        <span class="absolute -top-1 -right-1 bg-maroon-800 text-white font-sans text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white" id="cart-badge">0</span>
+                    </button>
+                    <button onclick="switchTab('buyer-history')" class="p-2.5 rounded-xl hover:bg-stone-150 text-stone-700 relative transition-colors" title="Riwayat Pembelian">
+                        <i data-lucide="history" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-2 border-l border-stone-200 pl-3">
+                        <div class="w-8 h-8 rounded-full bg-gold-200 flex items-center justify-center text-xs font-bold text-stone-900 border border-gold-400" id="user-avatar-initial">
+                            P
+                        </div>
+                        <div class="hidden lg:block text-left cursor-pointer" onclick="openAuthModal()">
+                            <p class="text-[10px] font-bold text-stone-900" id="user-display-name">Putri Ningsih</p>
+                            <p class="text-[9px] text-stone-400 hover:text-gold-600 transition-colors" id="user-account-action">Ubah Akun / Login</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Staff Controls (Hidden by default) -->
+                <div class="hidden items-center gap-3" id="staff-header-controls">
+                    <span class="text-xs text-stone-600 bg-stone-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 border border-stone-200">
+                        <i data-lucide="briefcase" class="w-3.5 h-3.5 text-gold-600"></i> Staff: <strong class="text-maroon-800" id="staff-display-name">Anita Permata</strong>
+                    </span>
+                </div>
+
+                <!-- Admin Controls (Hidden by default) -->
+                <div class="hidden items-center gap-3" id="admin-header-controls">
+                    <span class="text-xs text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5">
+                        <i data-lucide="crown" class="w-4 h-4 text-gold-500 animate-bounce"></i> Super Admin
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTENT SPACE -->
+    <main class="flex-grow">
+        
+        <!-- ============================================== -->
+        <!-- 1. MODUL PELANGGAN -->
+        <!-- ============================================== -->
+        <div id="module-buyer" class="space-y-6">
+            
+            <!-- Daily Gold Price Floating Ticker Banner -->
+            <section class="bg-gradient-to-r from-stone-950 via-maroon-950 to-stone-900 text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-gold-500/10 blur-3xl pointer-events-none"></div>
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+                    <div class="lg:col-span-6 space-y-4 text-center lg:text-left">
+                        <span class="inline-flex bg-gradient-to-r from-gold-500 to-gold-600 text-stone-950 text-[10px] font-extrabold tracking-widest uppercase px-3.5 py-1.5 rounded-full shadow">Sertifikasi Antam & Pegadaian</span>
+                        <h1 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+                            Investasi Abadi <span class="text-gold-400 italic">Kilau Emas Murni Terpercaya</span>
+                        </h1>
+                        <p class="text-stone-300 text-xs font-light max-w-lg leading-relaxed">
+                            Setiap perhiasan di Kencana Aurum dibuat dengan akurasi kadar yang tinggi, bersertifikat resmi, serta memiliki harga transparan yang selalu mengikuti kurs emas dunia terkini.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-6">
+                        <!-- Gold Price Live Feed Panel -->
+                        <div class="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 text-left space-y-4 shadow-xl">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="trending-up" class="w-5 h-5 text-gold-400"></i>
+                                    <h4 class="font-serif font-bold text-xs text-white uppercase tracking-wider">Harga Logam Mulia Hari Ini</h4>
+                                </div>
+                                <span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Live Rate
+                                </span>
+                            </div>
+                            
+                            <!-- Realtime Price Grid -->
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
+                                    <span class="text-[9px] text-stone-400 block font-bold">EMAS 24K (99.9%)</span>
+                                    <span class="text-sm font-extrabold text-gold-300 block mt-1" id="ticker-rate-24k">Rp 1.350.000</span>
+                                    <span class="text-[8px] text-stone-500 font-semibold">per gram</span>
+                                </div>
+                                <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
+                                    <span class="text-[9px] text-stone-400 block font-bold">EMAS 22K (91.6%)</span>
+                                    <span class="text-sm font-extrabold text-gold-300 block mt-1" id="ticker-rate-22k">Rp 1.236.600</span>
+                                    <span class="text-[8px] text-stone-500 font-semibold">per gram</span>
+                                </div>
+                                <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
+                                    <span class="text-[9px] text-stone-400 block font-bold">EMAS 18K (75.0%)</span>
+                                    <span class="text-sm font-extrabold text-gold-300 block mt-1" id="ticker-rate-18k">Rp 1.012.500</span>
+                                    <span class="text-[8px] text-stone-500 font-semibold">per gram</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Store Front -->
+            <div id="buyer-store-tab" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
+                
+                <!-- Gold Price History Visual Block -->
+                <div class="bg-white rounded-3xl border border-stone-200/80 p-6 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="activity" class="w-5 h-5 text-maroon-800"></i>
+                            <h3 class="font-serif text-lg font-bold text-stone-900">Perkembangan Pasar Emas</h3>
+                        </div>
+                        <p class="text-xs text-stone-500 font-light leading-relaxed">
+                            Grafik riwayat perubahan kurs dasar emas murni (24K) per gram dalam 5 hari terakhir di gerai Kencana Aurum.
+                        </p>
+                        <div class="pt-2">
+                            <div class="bg-stone-50 p-3.5 rounded-2xl border border-stone-150 flex items-center justify-between text-xs">
+                                <div>
+                                    <span class="text-[9px] text-stone-400 font-bold block">HARGA TERENDAH</span>
+                                    <span class="font-extrabold text-stone-700">Rp 1.330.000</span>
+                                </div>
+                                <div class="h-8 w-px bg-stone-200"></div>
+                                <div>
+                                    <span class="text-[9px] text-stone-400 font-bold block">HARGA TERTINGGI</span>
+                                    <span class="font-extrabold text-gold-600">Rp 1.350.000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Styled Daily Charts (using Flex/SVG) -->
+                    <div class="lg:col-span-7 flex flex-col justify-end">
+                        <div class="h-32 flex items-end justify-between gap-3 px-4" id="gold-price-bar-chart">
+                            <!-- Populated Dynamically with gold rate history objects -->
+                        </div>
+                        <div class="flex justify-between text-[9px] text-stone-400 font-bold px-4 mt-2 pt-2 border-t border-stone-100" id="gold-price-chart-labels">
+                            <!-- Labels -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Filters Section -->
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-serif text-xl sm:text-2xl font-bold text-stone-900">Koleksi Perhiasan Emas</h2>
+                            <p class="text-xs text-stone-400 mt-0.5">Sertifikat resmi dan garansi buy-back tinggi terjamin.</p>
+                        </div>
+                        <span class="text-xs text-stone-500 font-medium bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200" id="product-count-indicator">32 Item Terdaftar</span>
+                    </div>
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar" id="buyer-category-filters">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Product Catalog Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="buyer-product-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Buyer Transaction History Tab -->
+            <div id="buyer-history-tab" class="hidden max-w-4xl mx-auto px-4 py-8 space-y-6">
+                <div class="flex items-center justify-between border-b border-stone-200 pb-4">
+                    <div>
+                        <h2 class="font-serif text-2xl font-bold text-stone-900">Histori Pembelian</h2>
+                        <p class="text-stone-500 text-xs mt-1">Lacak status pesanan emas dan ulas kualitas perhiasannya.</p>
+                    </div>
+                    <button onclick="switchTab('buyer-store')" class="px-4 py-2 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 flex items-center gap-1.5">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Galeri
+                    </button>
+                </div>
+
+                <div class="space-y-4" id="buyer-history-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 2. MODUL STAFF TOKO -->
+        <!-- ============================================== -->
+        <div id="module-staff" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            
+            <!-- Staff Dashboard Profile -->
+            <div class="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-800 to-maroon-900 text-gold-400 flex items-center justify-center font-serif text-2xl font-bold border border-gold-400">
+                        S
+                    </div>
+                    <div>
+                        <h2 class="font-serif text-xl sm:text-2xl font-bold text-stone-900" id="staff-dashboard-profile-name">Anita Permata</h2>
+                        <p class="text-stone-500 text-xs mt-0.5">Staff Operasional Senior • ID Karyawan: STF-90220</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openAddProductModal()" class="px-5 py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white text-xs font-bold transition-all flex items-center gap-2 shadow">
+                        <i data-lucide="plus" class="w-4 h-4 text-gold-400"></i> Daftarkan Perhiasan Baru
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Ribbon for Staff -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm">
+                    <span class="text-stone-400 text-[10px] font-bold uppercase tracking-wider block">Penjualan Terkonfirmasi</span>
+                    <span class="text-xl sm:text-2xl font-bold text-stone-900 block mt-1" id="stat-staff-revenue">Rp 0</span>
+                    <span class="text-[10px] text-emerald-600 font-semibold block mt-1">▲ Transaksi Selesai</span>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm">
+                    <span class="text-stone-400 text-[10px] font-bold uppercase tracking-wider block">Karatase Terjual</span>
+                    <span class="text-xl sm:text-2xl font-bold text-stone-900 block mt-1" id="stat-staff-sold">0 Gram</span>
+                    <span class="text-[10px] text-stone-400 block mt-1">Volume total berat pesanan</span>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm">
+                    <span class="text-stone-400 text-[10px] font-bold uppercase tracking-wider block">Katalog Inventori</span>
+                    <span class="text-xl sm:text-2xl font-bold text-stone-900 block mt-1" id="stat-staff-products">0 Item</span>
+                    <span class="text-[10px] text-amber-700 font-semibold block mt-1" id="stat-staff-pending-product">0 Menunggu Verifikasi Admin</span>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm">
+                    <span class="text-stone-400 text-[10px] font-bold uppercase tracking-wider block">Pesanan Aktif</span>
+                    <span class="text-xl sm:text-2xl font-bold text-stone-900 block mt-1 text-gold-600 animate-pulse" id="stat-staff-active-orders">0 Pesanan</span>
+                    <span class="text-[10px] text-stone-400 block mt-1">Butuh konfirmasi pengiriman</span>
+                </div>
+            </div>
+
+            <!-- Staff Work Split -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left: Catalog and Gold Rate Controls -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- Gold Price Updates Card -->
+                    <div class="bg-stone-900 text-stone-200 p-6 rounded-3xl border border-stone-850 shadow-md space-y-4">
+                        <div class="flex items-center justify-between border-b border-stone-800 pb-3">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="coins" class="w-5 h-5 text-gold-400"></i>
+                                <h3 class="font-serif font-bold text-white text-base">Atur Kurs Emas Harian (24K)</h3>
+                            </div>
+                            <span class="text-[10px] bg-gold-400/10 text-gold-400 font-bold px-2.5 py-1 rounded-lg">Pembaruan Toko</span>
+                        </div>
+                        
+                        <form onsubmit="handleStaffGoldUpdate(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
+                            <div class="sm:col-span-8">
+                                <label class="block text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-1">Kurs Dasar Emas Murni 24K per gram (Rp) *</label>
+                                <div class="relative">
+                                    <span class="absolute left-3.5 top-2.5 text-xs text-stone-400 font-bold">Rp</span>
+                                    <input type="number" id="staff-gold-rate-input" required class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-stone-850 border border-stone-800 text-xs text-white outline-none focus:border-gold-500 font-bold">
+                                </div>
+                            </div>
+                            <button type="submit" class="sm:col-span-4 w-full py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-stone-950 text-xs font-extrabold uppercase tracking-wider transition-all shadow">
+                                Simpan Kurs
+                            </button>
+                        </form>
+                        <p class="text-[9px] text-stone-500 font-light">
+                            * Memperbarui nominal kurs dasar akan menyesuaikan secara real-time harga jual seluruh perhiasan yang memiliki kaitan kadar emas di dalam sistem.
+                        </p>
+                    </div>
+
+                    <!-- Manage Inventory List -->
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-200 pb-3">
+                            <h3 class="font-serif text-lg font-bold text-stone-900">Kelola Katalog Inventori</h3>
+                        </div>
+                        <div class="space-y-3" id="staff-product-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Customer Orders Pipeline & Reports -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-200 pb-3">
+                            <h3 class="font-serif text-lg font-bold text-stone-900">Pesanan Pelanggan Masuk</h3>
+                        </div>
+                        <div class="space-y-3" id="staff-orders-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Sales Chart/Report Simulation -->
+                    <div class="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+                        <div class="border-b border-stone-100 pb-3">
+                            <h4 class="font-serif font-bold text-sm text-stone-900">Ikhtisar Laporan Keuangan Staff</h4>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-xs text-stone-500">
+                                    <span>Penjualan Harian (Est.)</span>
+                                    <span class="font-bold text-stone-800" id="report-daily">Rp 0</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-stone-100 rounded-full mt-1.5 overflow-hidden">
+                                    <div class="h-full bg-gold-500 rounded-full" style="width: 45%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-stone-500">
+                                    <span>Penjualan Bulanan (Total Selesai)</span>
+                                    <span class="font-bold text-stone-800" id="report-monthly">Rp 0</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-stone-100 rounded-full mt-1.5 overflow-hidden">
+                                    <div class="h-full bg-maroon-800 rounded-full" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- 3. MODUL ADMIN -->
+        <!-- ============================================== -->
+        <div id="module-admin" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            
+            <div class="border-b border-stone-200 pb-4">
+                <h2 class="font-serif text-2xl font-bold text-stone-900">Pusat Kendali Administrasi Super</h2>
+                <p class="text-stone-500 text-xs mt-1">Verifikasi penayangan karya perhiasan, manajemen pengguna, serta monitoring arus transaksi global.</p>
+            </div>
+
+            <!-- Admin Stats Row -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Total Pengguna</span>
+                        <span class="text-lg font-bold text-stone-900 block" id="admin-stat-users">4 Akun</span>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center">
+                        <i data-lucide="package-search" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Butuh Verifikasi</span>
+                        <span class="text-lg font-bold text-orange-700 block animate-pulse" id="admin-stat-pending">0 Item</span>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                        <i data-lucide="circle-dollar-sign" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Volume Transaksi</span>
+                        <span class="text-lg font-bold text-stone-900 block" id="admin-stat-volume">Rp 0</span>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-maroon-50 text-maroon-800 flex items-center justify-center">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Kategori Aktif</span>
+                        <span class="text-lg font-bold text-stone-900 block">8 Kategori</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left: Verifikasi Produk Baru & User Management -->
+                <div class="lg:col-span-6 space-y-6">
+                    
+                    <!-- Product Verification Queue -->
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-200 pb-2 flex items-center justify-between">
+                            <h3 class="font-serif text-base font-bold text-stone-900">Persetujuan Penayangan Perhiasan</h3>
+                            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100" id="admin-pending-badge">0 Butuh Review</span>
+                        </div>
+                        <div class="space-y-3" id="admin-verification-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- User Management Section -->
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-200 pb-2 flex items-center justify-between">
+                            <h3 class="font-serif text-base font-bold text-stone-900">Daftar Akun Pengguna</h3>
+                            <button onclick="openAddUserModal()" class="px-3 py-1 bg-maroon-800 text-white text-[10px] font-bold rounded-lg hover:bg-maroon-900 transition-colors flex items-center gap-1">
+                                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Staff
+                            </button>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden divide-y divide-stone-100" id="admin-users-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Global Transaction Logs -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="space-y-4">
+                        <div class="border-b border-stone-200 pb-2">
+                            <h3 class="font-serif text-base font-bold text-stone-900">Log Monitoring Transaksi Global</h3>
+                        </div>
+                        <div class="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-1" id="admin-transactions-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- System Report Box -->
+                    <div class="bg-stone-900 text-stone-200 p-6 rounded-3xl border border-stone-850 space-y-3">
+                        <h4 class="font-serif font-bold text-sm text-white">Produk Terlaris Sistem</h4>
+                        <div class="space-y-3" id="admin-best-seller-container">
+                            <!-- Generated Dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- GLOBAL FOOTER -->
+    <footer class="bg-stone-950 text-stone-300 pt-12 pb-8 border-t border-stone-900 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-stone-900">
+            <div class="md:col-span-5 space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-white text-maroon-800 flex items-center justify-center font-serif font-bold text-lg">
+                        K
+                    </div>
+                    <span class="font-serif text-lg font-bold tracking-tight text-white">
+                        Kencana<span class="text-gold-500 font-sans font-light">Aurum</span>
+                    </span>
+                </div>
+                <p class="text-[11px] text-stone-400 font-light leading-relaxed max-w-sm">
+                    Butik perhiasan emas murni premium terpercaya sejak 2004. Menyediakan perhiasan indah bernilai seni tinggi, dengan akurasi karatasi serta garansi tukar tambah terbaik.
+                </p>
+            </div>
+            <div class="md:col-span-3 space-y-3">
+                <h5 class="text-[10px] font-bold text-gold-500 uppercase tracking-widest font-serif">Koleksi Emas</h5>
+                <ul class="space-y-1.5 text-xs text-stone-400 font-light" id="footer-categories-list">
+                    <!-- Dynamic categories -->
+                </ul>
+            </div>
+            <div class="md:col-span-4 space-y-3">
+                <h5 class="text-[10px] font-bold text-gold-500 uppercase tracking-widest font-serif">Pusat Layanan Pelanggan</h5>
+                <p class="text-xs text-stone-400 font-light leading-relaxed">
+                    Uji coba simulasi transaksi emas di website ini tidak melibatkan pengiriman aset perhiasan berharga fisik nyata.
+                </p>
+                <div class="space-y-1 text-xs text-stone-300 font-semibold">
+                    <p class="hover:text-gold-400">💌 support@kencanaaurum.co.id</p>
+                    <p class="hover:text-gold-400">📞 (021) 500-6009</p>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-[9px] text-stone-500 tracking-wider">
+            <p>&copy; 2026 KENCANA AURUM JEWELRY SIMULATOR. ALL RIGHTS RESERVED.</p>
+            <div class="flex gap-4 mt-2 sm:mt-0 uppercase">
+                <a href="#" class="hover:text-stone-300">Syarat Ketentuan</a>
+                <a href="#" class="hover:text-stone-300">Kebijakan Karatase</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ============================================== -->
+    <!-- MODALS & DIALOG FLUID OVERLAYS -->
+    <!-- ============================================== -->
+
+    <!-- AUTHENTICATION DIALOG (LOGIN, REGISTER, FORGOT PASSWORD) -->
+    <div id="auth-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('auth-modal')">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-stone-200 relative" onclick="event.stopPropagation()">
+            <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-800">
+                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <!-- Screen 1: LOGIN -->
+            <div id="auth-screen-login" class="space-y-4">
+                <div class="border-b border-stone-100 pb-2">
+                    <h3 class="font-serif text-lg font-bold text-stone-900">Masuk Akun Aurum</h3>
+                    <p class="text-stone-400 text-[10px] mt-0.5">Masuk ke simulasi untuk membeli & meninjau emas.</p>
+                </div>
+                <form onsubmit="handleAuthLogin(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Email Pengguna</label>
+                        <input type="email" id="login-email" required placeholder="putri@gmail.com" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div class="flex justify-between items-center text-[10px]">
+                        <button type="button" onclick="switchAuthScreen('forgot')" class="text-gold-600 hover:underline">Lupa Password?</button>
+                        <button type="button" onclick="switchAuthScreen('register')" class="text-maroon-800 font-bold hover:underline">Daftar Akun Baru</button>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all shadow">Masuk Aplikasi</button>
+                </form>
+            </div>
+
+            <!-- Screen 2: REGISTER -->
+            <div id="auth-screen-register" class="hidden space-y-4">
+                <div class="border-b border-stone-100 pb-2">
+                    <h3 class="font-serif text-lg font-bold text-stone-900">Daftar Akun Kencana</h3>
+                    <p class="text-stone-400 text-[10px] mt-0.5">Dapatkan garansi buyback emas murni langsung.</p>
+                </div>
+                <form onsubmit="handleAuthRegister(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Nama Lengkap</label>
+                        <input type="text" id="reg-name" required placeholder="Budi Santoso" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Email</label>
+                        <input type="email" id="reg-email" required placeholder="budi@example.com" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Kata Sandi</label>
+                        <input type="password" id="reg-password" required placeholder="Minimal 6 karakter" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div class="text-[10px] text-right">
+                        <button type="button" onclick="switchAuthScreen('login')" class="text-maroon-800 font-bold hover:underline">Sudah punya akun? Login</button>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all shadow">Buat Akun Pelanggan</button>
+                </form>
+            </div>
+
+            <!-- Screen 3: FORGOT PASSWORD -->
+            <div id="auth-screen-forgot" class="hidden space-y-4">
+                <div class="border-b border-stone-100 pb-2">
+                    <h3 class="font-serif text-lg font-bold text-stone-900">Reset Sandi Akun</h3>
+                    <p class="text-stone-400 text-[10px] mt-0.5">Tautan pemulihan akan dikirimkan ke email terdaftar Anda.</p>
+                </div>
+                <form onsubmit="handleAuthForgot(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Alamat Email Terdaftar</label>
+                        <input type="email" id="forgot-email" required placeholder="putri@gmail.com" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-medium">
+                    </div>
+                    <div class="flex justify-between items-center text-[10px]">
+                        <button type="button" onclick="switchAuthScreen('login')" class="text-stone-400 hover:underline">Kembali Login</button>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all shadow">Kirim Reset Sandi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMER: PRODUCT DETAIL DIALOG -->
+    <div id="product-detail-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('product-detail-modal')">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-stone-200 relative flex flex-col md:flex-row max-h-[90vh]" onclick="event.stopPropagation()">
+            
+            <button onclick="closeModal('product-detail-modal')" class="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/95 shadow hover:bg-stone-150 text-stone-800">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Product Picture block -->
+            <div class="md:w-1/2 bg-stone-100 flex items-center justify-center relative min-h-[220px] md:min-h-full">
+                <img id="detail-image" src="" alt="" class="w-full h-full object-cover absolute inset-0">
+                <span id="detail-category-badge" class="absolute top-4 left-4 bg-maroon-800 text-white font-bold text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-xl shadow-md">Kategori</span>
+            </div>
+
+            <!-- Content Details -->
+            <div class="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto custom-scrollbar max-h-[50vh] md:max-h-[90vh]">
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Koleksi Logam Kencana</span>
+                        <h3 id="detail-title" class="font-serif text-xl sm:text-2xl font-bold text-stone-900 leading-snug">Nama Perhiasan</h3>
+                    </div>
+
+                    <!-- Purity and Weight Specifications -->
+                    <div class="grid grid-cols-2 gap-2 bg-stone-50 p-3 rounded-2xl border border-stone-200/60">
+                        <div>
+                            <span class="text-[8px] text-stone-400 font-bold block uppercase">KADAR EMAS</span>
+                            <span id="detail-purity" class="text-xs font-bold text-stone-900">22 Karat (91.6%)</span>
+                        </div>
+                        <div>
+                            <span class="text-[8px] text-stone-400 font-bold block uppercase">BERAT EMAS</span>
+                            <span id="detail-weight" class="text-xs font-bold text-stone-900">4.50 Gram</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-baseline gap-2">
+                        <span id="detail-price" class="text-lg font-extrabold text-maroon-800">Rp 0</span>
+                        <span class="text-[10px] text-stone-400 font-semibold">| Tersedia: <strong class="text-stone-800" id="detail-stock">0</strong> pcs</span>
+                    </div>
+
+                    <div class="space-y-1 border-t border-stone-100 pt-3">
+                        <span class="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Deskripsi Logam Mulia</span>
+                        <p id="detail-description" class="text-xs text-stone-600 font-light leading-relaxed">
+                            Deskripsi lengkap produk.
+                        </p>
+                    </div>
+
+                    <!-- Reviews Area -->
+                    <div class="space-y-2 border-t border-stone-100 pt-3">
+                        <span class="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Ulasan Kolektor</span>
+                        <div id="detail-reviews-list" class="space-y-2 max-h-32 overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Dynamically generated reviews list -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-stone-100 mt-4">
+                    <button id="btn-add-to-cart" class="w-full py-3.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider text-center transition-all shadow flex items-center justify-center gap-1.5">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i> Masukkan Tas Belanja
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMER: SHOPPING CART DRAWERS -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-opacity" onclick="closeCart()"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between p-6 border-l border-stone-200">
+                <div class="flex flex-col flex-grow">
+                    <div class="flex items-center justify-between pb-4 border-b border-stone-150">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="gem" class="w-5 h-5 text-maroon-800"></i>
+                            <span class="font-serif text-lg font-bold text-stone-900">Tas Belanja Emas</span>
+                        </div>
+                        <button onclick="closeCart()" class="p-2 text-stone-400 hover:text-stone-800">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Cart Item Container -->
+                    <div class="flex-grow overflow-y-auto custom-scrollbar py-4 space-y-4" id="cart-items-container">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Footer Summary inside Cart -->
+                <div class="pt-6 border-t border-stone-100 space-y-4">
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-xs text-stone-500 font-semibold">Subtotal Perhiasan:</span>
+                        <span class="text-lg font-extrabold text-stone-900" id="cart-total-price">Rp 0</span>
+                    </div>
+                    <button onclick="openCheckoutModal()" class="w-full py-3.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white text-xs font-bold transition-all shadow block text-center uppercase tracking-wider" id="btn-checkout-trigger">
+                        Lanjut ke Pembayaran Safepack
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMER: CHECKOUT MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('checkout-modal')">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 relative space-y-6" onclick="event.stopPropagation()">
+            <button onclick="closeModal('checkout-modal')" class="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-800">
+                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <div class="border-b border-stone-100 pb-3">
+                <h3 class="font-serif text-lg font-bold text-stone-900">Detail Pengiriman Proteksi</h3>
+                <p class="text-stone-400 text-[10px] mt-0.5">Konfirmasi tujuan pengiriman pesanan emas dengan asuransi penuh.</p>
+            </div>
+
+            <form class="space-y-4" onsubmit="handleCheckout(event)">
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Alamat Pengiriman Penerima *</label>
+                        <textarea id="checkout-address" required rows="3" placeholder="Jl. Sudirman No.10, Medan Kota, Sumatera Utara" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 resize-none font-medium"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Metode Pembayaran Aman *</label>
+                        <select id="checkout-payment" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-bold">
+                            <option value="Mandiri Virtual Account">Mandiri Virtual Account</option>
+                            <option value="BCA Virtual Account">BCA Virtual Account</option>
+                            <option value="Kartu Kredit Berasuransi">Kartu Kredit Berasuransi</option>
+                            <option value="Sistem COD (Kurir Toko Emas)">COD Khusus Kurir Toko (Kencana Aurum)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Order list summarization in form -->
+                <div class="bg-stone-50 p-4 rounded-2xl space-y-2 border border-stone-150">
+                    <span class="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Ringkasan Biaya Proteksi</span>
+                    <div class="flex justify-between text-xs text-stone-600 font-medium">
+                        <span>Kurir Khusus + Asuransi Emas</span>
+                        <span class="text-stone-900">Rp 45.000</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-stone-600 font-bold border-t border-stone-200/60 pt-2">
+                        <span>Total Pembayaran</span>
+                        <span class="text-maroon-800" id="checkout-grand-total">Rp 0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow">
+                    <i data-lucide="check-square" class="w-4 h-4 text-gold-400"></i> Buat Pesanan Emas
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CUSTOMER: LEAVE A REVIEW MODAL -->
+    <div id="review-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('review-modal')">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-stone-200 relative space-y-5" onclick="event.stopPropagation()">
+            <button onclick="closeModal('review-modal')" class="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-800">
+                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <div class="border-b border-stone-100 pb-2">
+                <h3 class="font-serif text-lg font-bold text-stone-900">Ulas Perhiasan Emas</h3>
+                <p class="text-stone-400 text-[10px] mt-0.5">Berikan penilaian terhadap keindahan pengerjaan perhiasan emas kami.</p>
+            </div>
+
+            <form class="space-y-4" onsubmit="handleReviewSubmit(event)">
+                <input type="hidden" id="review-product-id">
+                <input type="hidden" id="review-order-id">
+                
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Skor Bintang *</label>
+                        <!-- Dynamic Star Picker -->
+                        <div class="flex items-center gap-1.5" id="star-picker-container">
+                            <!-- Generated via JS -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Catatan Ulasan *</label>
+                        <textarea id="review-comment" required rows="3" placeholder="Sangat mengkilau, karatase diuji pas, dan sertifikat Antam lengkap!" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 resize-none font-medium"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow">
+                    Kirim Ulasan & Rating
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- STAFF: ADD PRODUCT MODAL -->
+    <div id="add-product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('add-product-modal')">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 relative space-y-6" onclick="event.stopPropagation()">
+            <button onclick="closeModal('add-product-modal')" class="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-800">
+                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <div class="border-b border-stone-100 pb-3">
+                <h3 class="font-serif text-lg font-bold text-stone-900" id="form-product-modal-title">Daftarkan Perhiasan Baru</h3>
+                <p class="text-stone-400 text-[10px] mt-0.5">Semua perhiasan baru wajib diverifikasi Admin untuk memastikan kelayakan foto, berat, dan karatase resmi.</p>
+            </div>
+
+            <form class="space-y-4" onsubmit="handleProductFormSubmit(event)">
+                <input type="hidden" id="form-product-id">
+                
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Nama Perhiasan Kencana *</label>
+                        <input type="text" id="add-p-title" required placeholder="Contoh: Kalung Rantai Milano Royal Gold" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Kategori Perhiasan *</label>
+                            <select id="add-p-category" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                                <option value="Cincin Emas">Cincin Emas</option>
+                                <option value="Kalung Emas">Kalung Emas</option>
+                                <option value="Gelang Emas">Gelang Emas</option>
+                                <option value="Anting Emas">Anting Emas</option>
+                                <option value="Liontin Emas">Liontin Emas</option>
+                                <option value="Emas Batangan">Emas Batangan</option>
+                                <option value="Perhiasan Anak">Perhiasan Anak</option>
+                                <option value="Perhiasan Custom">Perhiasan Custom</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Stok Perhiasan *</label>
+                            <input type="number" id="add-p-stock" required min="1" placeholder="5" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Berat Emas (Gram) *</label>
+                            <input type="number" step="0.01" id="add-p-weight" required placeholder="4.50" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Kadar Emas (Karat) *</label>
+                            <select id="add-p-purity" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-bold">
+                                <option value="24K">24 Karat (99.9%)</option>
+                                <option value="22K">22 Karat (91.6%)</option>
+                                <option value="18K">18 Karat (75.0%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Ongkos Pembuatan (Rp) *</label>
+                            <input type="number" id="add-p-craft-fee" required placeholder="350000" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Preset Gambar Perhiasan *</label>
+                            <select id="add-p-image" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                                <option value="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=500&q=80">Cincin Emas Solitaire</option>
+                                <option value="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=500&q=80">Kalung Emas Mutiara</option>
+                                <option value="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=500&q=80">Gelang Emas Berlian</option>
+                                <option value="https://images.unsplash.com/photo-1629224316170-86c393552a95?auto=format&fit=crop&w=500&q=80">Anting Emas Tempaan</option>
+                                <option value="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80">Liontin Klasik Mahkota</option>
+                                <option value="https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?auto=format&fit=crop&w=500&q=80">Emas Batangan Logam Mulia</option>
+                                <option value="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=500&q=80">Perhiasan Custom Eksklusif</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Spesifikasi Material / Deskripsi Singkat *</label>
+                        <textarea id="add-p-description" required rows="3" placeholder="Sertifikat pegadaian disertakan, desain ukir klasik..." class="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 resize-none font-semibold"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow">
+                    Simpan & Ajukan Verifikasi
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN: ADD USER / STAFF MODAL -->
+    <div id="add-user-modal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-stone-900/70 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal('add-user-modal')">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-stone-200 relative space-y-6" onclick="event.stopPropagation()">
+            <button onclick="closeModal('add-user-modal')" class="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-800">
+                <i data-lucide="x" class="w-4.5 h-4.5"></i>
+            </button>
+
+            <div class="border-b border-stone-100 pb-3">
+                <h3 class="font-serif text-lg font-bold text-stone-900">Tambahkan Staff Toko Baru</h3>
+                <p class="text-stone-400 text-[10px] mt-0.5">Pendaftaran resmi untuk akun fungsional staff operasional butik.</p>
+            </div>
+
+            <form class="space-y-4" onsubmit="handleAdminAddUser(event)">
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Nama Staff Lengkap *</label>
+                        <input type="text" id="admin-user-name" required placeholder="Hendra Wijaya" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                    </div>
+
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Alamat Email Kerja *</label>
+                        <input type="email" id="admin-user-email" required placeholder="hendra@kencana.co.id" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                    </div>
+
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-400 uppercase mb-1">Password Staff *</label>
+                        <input type="password" id="admin-user-password" required placeholder="••••••••" class="w-full px-3.5 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs text-stone-800 outline-none focus:border-maroon-800 font-semibold">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow">
+                    Daftarkan Akun Staff
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- JAVASCRIPT CORE ENGINE & REACTIVE DATABASE -->
+    <!-- ============================================== -->
+    <script>
+        // BASE GOLD PRICE (24K) per gram
+        let goldBaseRate24k = parseInt(localStorage.getItem('kencana_gold_base')) || 1350000;
+        
+        let goldPriceHistory = [
+            { date: "21 Jun", rate: 1330000 },
+            { date: "22 Jun", rate: 1335000 },
+            { date: "23 Jun", rate: 1345000 },
+            { date: "24 Jun", rate: 1340000 },
+            { date: "25 Jun", rate: 1350000 }
+        ];
+
+        // IN-MEMORY SEEDED LUXURY GOLD PRODUCTS (4 items per category for all 8 categories)
+        let INITIAL_GOLD_PRODUCTS = [
+            // ================= 1. CINCIN EMAS =================
+            {
+                id: "g_cincin_1",
+                title: "Cincin Emas Solitaire Royal Diamond",
+                category: "Cincin Emas",
+                weight: 3.50,
+                purity: "18K",
+                craftFee: 450000,
+                stock: 6,
+                image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=500&q=80",
+                description: "Cincin emas berkaratase 18 Karat yang anggun dengan tatahan berlian murni di tengahnya. Sangat cocok sebagai cincin lamaran mewah.",
+                verified: true
+            },
+            {
+                id: "g_cincin_2",
+                title: "Cincin Kawin Classic Band 22K",
+                category: "Cincin Emas",
+                weight: 5.00,
+                purity: "22K",
+                craftFee: 250000,
+                stock: 12,
+                image: "https://images.unsplash.com/photo-1543294001-f7cbfe92237e?auto=format&fit=crop&w=500&q=80",
+                description: "Sepasang cincin pernikahan tradisional dengan polesan mulus tanpa cela menggunakan material emas kadar tinggi 22K.",
+                verified: true
+            },
+            {
+                id: "g_cincin_3",
+                title: "Cincin Emas Eternity Emerald Cut",
+                category: "Cincin Emas",
+                weight: 4.20,
+                purity: "18K",
+                craftFee: 380000,
+                stock: 8,
+                image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=500&q=80",
+                description: "Kombinasi klasik barisan batu emerald cut di sepanjang lingkar cincin emas kuning 18 karat yang berkilau premium.",
+                verified: true
+            },
+            {
+                id: "g_cincin_4",
+                title: "Cincin Etruscan Filigree Gold Ring",
+                category: "Cincin Emas",
+                weight: 6.50,
+                purity: "22K",
+                craftFee: 500000,
+                stock: 5,
+                image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=500&q=80",
+                description: "Mahakarya seni ukir filigree kuno bergaya Etruscan mewah di atas emas 22 karat padat khusus pencinta estetika antik.",
+                verified: true
+            },
+
+            // ================= 2. KALUNG EMAS =================
+            {
+                id: "g_kalung_1",
+                title: "Kalung Milano Rope Chain 24K",
+                category: "Kalung Emas",
+                weight: 12.50,
+                purity: "24K",
+                craftFee: 600000,
+                stock: 4,
+                image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=500&q=80",
+                description: "Rantai bergaya Italia dengan rajutan kawat emas murni 24K tebal yang solid dan memberikan kilau yang tak tertandingi di leher Anda.",
+                verified: true
+            },
+            {
+                id: "g_kalung_2",
+                title: "Kalung Choker Aurelia Pearl 18K",
+                category: "Kalung Emas",
+                weight: 8.20,
+                purity: "18K",
+                craftFee: 420000,
+                stock: 7,
+                image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=500&q=80",
+                description: "Kalung model choker ketat modern dengan mutiara air tawar alami yang digantung indah pada rantai emas kuning 18 karat.",
+                verified: true
+            },
+            {
+                id: "g_kalung_3",
+                title: "Kalung Rantai Figaro Premium 22K",
+                category: "Kalung Emas",
+                weight: 15.00,
+                purity: "22K",
+                craftFee: 550000,
+                stock: 6,
+                image: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?auto=format&fit=crop&w=500&q=80",
+                description: "Desain rantai Figaro klasik 3-1 link dengan pengait lobster tebal bergaransi kuat dan tahan lama, dikerjakan sangat presisi.",
+                verified: true
+            },
+            {
+                id: "g_kalung_4",
+                title: "Kalung Herringbone Sleek Gold",
+                category: "Kalung Emas",
+                weight: 10.00,
+                purity: "18K",
+                craftFee: 400000,
+                stock: 9,
+                image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=500&q=80",
+                description: "Kalung rantai datar model tulang herring yang bersandar sempurna di dada, memberikan efek pantulan cahaya yang dramatis.",
+                verified: true
+            },
+
+            // ================= 3. GELANG EMAS =================
+            {
+                id: "g_gelang_1",
+                title: "Gelang Bangle Flora Chiseled 22K",
+                category: "Gelang Emas",
+                weight: 15.00,
+                purity: "22K",
+                craftFee: 750000,
+                stock: 3,
+                image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=500&q=80",
+                description: "Bangle emas berpola ukiran floral khas pengrajin lokal berlisensi emas kadar 22 karat. Memiliki rilis klip pengaman tersembunyi.",
+                verified: true
+            },
+            {
+                id: "g_gelang_2",
+                title: "Gelang Rantai Curb Heavy Link 24K",
+                category: "Gelang Emas",
+                weight: 20.00,
+                purity: "24K",
+                craftFee: 850000,
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=500&q=80",
+                description: "Gelang rantai curb tebal berkilau megah berkelas maskulin. Terbuat dari emas murni 24K solid investasi jangka panjang bernilai tinggi.",
+                verified: true
+            },
+            {
+                id: "g_gelang_3",
+                title: "Gelang Tennis Rose Gold Classic",
+                category: "Gelang Emas",
+                weight: 9.50,
+                purity: "18K",
+                craftFee: 650000,
+                stock: 8,
+                image: "https://images.unsplash.com/photo-1602752275313-477eaabc497b?auto=format&fit=crop&w=500&q=80",
+                description: "Barisan permata zirkonia premium bulat berkilau elegan di atas emas rose gold 18 karat yang feminim, lentur dan pas di pergelangan.",
+                verified: true
+            },
+            {
+                id: "g_gelang_4",
+                title: "Gelang Bangle Twisted Wave 22K",
+                category: "Gelang Emas",
+                weight: 12.00,
+                purity: "22K",
+                craftFee: 480000,
+                stock: 5,
+                image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=500&q=80",
+                description: "Bangle bergelombang spiral ganda yang dipilin dengan teknologi mesin presisi Italia menghasilkan kilauan tiga dimensi.",
+                verified: true
+            },
+
+            // ================= 4. ANTING EMAS =================
+            {
+                id: "g_anting_1",
+                title: "Anting Stud Tear-Drop Baroque 18K",
+                category: "Anting Emas",
+                weight: 2.80,
+                purity: "18K",
+                craftFee: 300000,
+                stock: 8,
+                image: "https://images.unsplash.com/photo-1629224316170-86c393552a95?auto=format&fit=crop&w=500&q=80",
+                description: "Anting gantung berbentuk rintik air yang anggun dari lempeng emas 18K yang ditempa halus dengan pengait hipoalergenik yang aman.",
+                verified: true
+            },
+            {
+                id: "g_anting_2",
+                title: "Anting Hoop Aureate Chunky 22K",
+                category: "Anting Emas",
+                weight: 5.50,
+                purity: "22K",
+                craftFee: 350000,
+                stock: 10,
+                image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=500&q=80",
+                description: "Anting bundar tebal yang bersinar modern, ringan saat dikenakan dan sangat ikonik untuk penampilan casual-luxury sehari-hari.",
+                verified: true
+            },
+            {
+                id: "g_anting_3",
+                title: "Anting Gantung Filigree Drop 18K",
+                category: "Anting Emas",
+                weight: 4.00,
+                purity: "18K",
+                craftFee: 390000,
+                stock: 6,
+                image: "https://images.unsplash.com/photo-1635767790041-9c19b3eb7d70?auto=format&fit=crop&w=500&q=80",
+                description: "Desain bermotif jaring etnik timur tengah berlubang artistik yang menawan hati saat bergoyang terkena sorotan cahaya.",
+                verified: true
+            },
+            {
+                id: "g_anting_4",
+                title: "Anting Klip Chandeliers Classic 22K",
+                category: "Anting Emas",
+                weight: 7.20,
+                purity: "22K",
+                craftFee: 550000,
+                stock: 4,
+                image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=500&q=80",
+                description: "Desain chandelier megah bertingkat tiga yang memancarkan pesona aristokrasi mewah Eropa bagi pemakainya.",
+                verified: true
+            },
+
+            // ================= 5. LIONTIN EMAS =================
+            {
+                id: "g_liontin_1",
+                title: "Liontin Kaligrafi Mandala 24K",
+                category: "Liontin Emas",
+                weight: 4.20,
+                purity: "24K",
+                craftFee: 350000,
+                stock: 5,
+                image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80",
+                description: "Seni tatah presisi murni berbentuk mandala spiritualitas di atas kepingan emas murni 24K bersertifikat resmi.",
+                verified: true
+            },
+            {
+                id: "g_liontin_2",
+                title: "Liontin Safir Royal Heart Pendant",
+                category: "Liontin Emas",
+                weight: 3.80,
+                purity: "18K",
+                craftFee: 450000,
+                stock: 7,
+                image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=500&q=80",
+                description: "Liontin berbentuk hati berlapis emas 18 karat yang bermahkotakan batu permata biru Safir replika Royal Blue menakjubkan.",
+                verified: true
+            },
+            {
+                id: "g_liontin_3",
+                title: "Liontin Locket Vintage Victorian 22K",
+                category: "Liontin Emas",
+                weight: 5.00,
+                purity: "22K",
+                craftFee: 400000,
+                stock: 4,
+                image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=500&q=80",
+                description: "Liontin locket berongga penyimpan foto kenangan bergaya era Ratu Victoria Inggris dengan kuncian klik aman.",
+                verified: true
+            },
+            {
+                id: "g_liontin_4",
+                title: "Liontin Zodiak Celestial Gold Medal",
+                category: "Liontin Emas",
+                weight: 6.00,
+                purity: "24K",
+                craftFee: 300000,
+                stock: 12,
+                image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=500&q=80",
+                description: "Medali bulat emas murni dengan ukiran rasi bintang zodiak kustom bercahaya kilat satin doff.",
+                verified: true
+            },
+
+            // ================= 6. EMAS BATANGAN =================
+            {
+                id: "g_batangan_1",
+                title: "Logam Mulia Kencana Gold Bar 24K",
+                category: "Emas Batangan",
+                weight: 10.00,
+                purity: "24K",
+                craftFee: 150000,
+                stock: 50,
+                image: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?auto=format&fit=crop&w=500&q=80",
+                description: "Emas batangan investasi murni berkadar 99.9% tersertifikasi lembaga penguji mutu internasional, dikemas rapat dalam plastik pelindung.",
+                verified: true
+            },
+            {
+                id: "g_batangan_2",
+                title: "Logam Mulia Gift Series Birthday 1g",
+                category: "Emas Batangan",
+                weight: 1.00,
+                purity: "24K",
+                craftFee: 60000,
+                stock: 100,
+                image: "https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=500&q=80",
+                description: "Emas batangan pecahan 1 gram murni dalam kemasan eksklusif kartu ucapan selamat ulang tahun bertema hiasan emas berkilau.",
+                verified: true
+            },
+            {
+                id: "g_batangan_3",
+                title: "Logam Mulia Cast Bar 50g Stack",
+                category: "Emas Batangan",
+                weight: 50.00,
+                purity: "24K",
+                craftFee: 400000,
+                stock: 15,
+                image: "https://images.unsplash.com/photo-1589758438368-0ad531db3366?auto=format&fit=crop&w=500&q=80",
+                description: "Emas murni tuang berukuran 50 gram tebal yang sangat pas disimpan sebagai pilar utama aset lindung nilai keluarga Anda.",
+                verified: true
+            },
+            {
+                id: "g_batangan_4",
+                title: "Kepingan Koin Dinar Syariah 4.25g",
+                category: "Emas Batangan",
+                weight: 4.25,
+                purity: "24K",
+                craftFee: 120000,
+                stock: 45,
+                image: "https://images.unsplash.com/photo-1621640456822-488b3941b52f?auto=format&fit=crop&w=500&q=80",
+                description: "Koin dinar bersertifikat resmi berbobot standar 1 Dinar (4.25 gram) emas 24 karat untuk transaksi syar'i dan mahar perkawinan.",
+                verified: true
+            },
+
+            // ================= 7. PERHIASAN ANAK =================
+            {
+                id: "g_anak_1",
+                title: "Gelang Kaki Bayi Bell Charms 22K",
+                category: "Perhiasan Anak",
+                weight: 2.50,
+                purity: "22K",
+                craftFee: 200000,
+                stock: 15,
+                image: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=500&q=80",
+                description: "Gelang kaki berdiameter elastis berhiaskan bola lonceng gemerincing lucu yang dirancang aman, halus, dan tumpul bagi kulit bayi.",
+                verified: true
+            },
+            {
+                id: "g_anak_2",
+                title: "Anting Anak Minnie Mouse Red Enamel",
+                category: "Perhiasan Anak",
+                weight: 1.20,
+                purity: "18K",
+                craftFee: 180000,
+                stock: 20,
+                image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=500&q=80",
+                description: "Anting tusuk model karakter Minnie Mouse lucu dengan lapisan enamel merah cantik anti karat dan kancing pengunci putar ultra-aman.",
+                verified: true
+            },
+            {
+                id: "g_anak_3",
+                title: "Gelang Tangan Serut Little Star",
+                category: "Perhiasan Anak",
+                weight: 2.00,
+                purity: "18K",
+                craftFee: 220000,
+                stock: 10,
+                image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=500&q=80",
+                description: "Gelang rantai serut fleksibel yang bisa diatur menyesuaikan tumbuh kembang lengan anak, dihiasi bintang kecil berkilau.",
+                verified: true
+            },
+            {
+                id: "g_anak_4",
+                title: "Liontin Bayi Custom Huruf Inisial 22K",
+                category: "Perhiasan Anak",
+                weight: 1.50,
+                purity: "22K",
+                craftFee: 170000,
+                stock: 14,
+                image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=500&q=80",
+                description: "Liontin inisial mungil bertepi lengkung tumpul sempurna, aman digantungkan pada kalung bayi tanpa menyakiti kulit sensitif.",
+                verified: true
+            },
+
+            // ================= 8. PERHIASAN CUSTOM =================
+            {
+                id: "g_custom_1",
+                title: "Cincin Kawin Sidik Jari Custom",
+                category: "Perhiasan Custom",
+                weight: 7.50,
+                purity: "22K",
+                craftFee: 800000,
+                stock: 5,
+                image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=500&q=80",
+                description: "Ukiran laser sidik jari pasangan Anda yang romantis di sekeliling permukaan luar cincin emas 22 karat murni pilihan.",
+                verified: true
+            },
+            {
+                id: "g_custom_2",
+                title: "Kalung Monogram Nama Ukir Khusus",
+                category: "Perhiasan Custom",
+                weight: 6.00,
+                purity: "18K",
+                craftFee: 500000,
+                stock: 8,
+                image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=500&q=80",
+                description: "Buat nama panggilan atau tanggal spesial Anda terpatri anggun dengan font kaligrafi indah berlapis emas 18 Karat.",
+                verified: true
+            },
+            {
+                id: "g_custom_3",
+                title: "Gelang Cuff Ukir Prasasti Kuno 24K",
+                category: "Perhiasan Custom",
+                weight: 18.50,
+                purity: "24K",
+                craftFee: 1000000,
+                stock: 3,
+                image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80",
+                description: "Ukiran kutipan bait prasasti Jawa Kuno pembawa berkat keberuntungan di permukaan bagian dalam cuff lebar emas murni 24K.",
+                verified: true
+            },
+            {
+                id: "g_custom_4",
+                title: "Bros Hijab Custom Ornamen Kebaya",
+                category: "Perhiasan Custom",
+                weight: 11.00,
+                purity: "22K",
+                craftFee: 650000,
+                stock: 6,
+                image: "https://images.unsplash.com/photo-1629224316170-86c393552a95?auto=format&fit=crop&w=500&q=80",
+                description: "Aksesoris bros peniti berornamen rumit motif sayap Garuda khas Kerajaan Nusantara berbahan emas 22K penunjang busana kebaya.",
+                verified: true
+            }
+        ];
+
+        // USER ACCOUNTS SIMULATED DATABASE
+        let users = JSON.parse(localStorage.getItem('kencana_users')) || [
+            { id: "u_01", name: "Putri Ningsih", email: "putri@gmail.com", password: "123", role: "customer" },
+            { id: "u_02", name: "Budi Santoso", email: "budi@gmail.com", password: "123", role: "customer" },
+            { id: "s_01", name: "Anita Permata", email: "anita@kencana.co.id", password: "123", role: "staff" },
+            { id: "a_01", name: "Super Admin", email: "admin@kencana.co.id", password: "123", role: "admin" }
+        ];
+
+        // LOGGED-IN SESSION POINTERS
+        let currentUser = JSON.parse(localStorage.getItem('kencana_logged_user')) || users[0]; // default to Putri Ningsih
+
+        let products = JSON.parse(localStorage.getItem('kencana_products')) || [...INITIAL_GOLD_PRODUCTS];
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('kencana_orders')) || [
+            {
+                id: "ORD-9082",
+                buyerId: "u_01",
+                buyerName: "Putri Ningsih",
+                buyerAddress: "Jl. Sudirman No.10, Medan Kota",
+                items: [
+                    { productId: "g_cincin_1", title: "Cincin Emas Solitaire Royal Diamond", weight: 3.5, purity: "18K", price: 3993750, quantity: 1, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=500&q=80" }
+                ],
+                subtotal: 3993750,
+                ongkir: 45000,
+                total: 4038750,
+                paymentMethod: "Mandiri Virtual Account",
+                status: "Selesai", // Pending, Diproses, Dikirim, Selesai
+                date: "24 Juni 2026",
+            }
+        ];
+
+        let reviews = JSON.parse(localStorage.getItem('kencana_reviews')) || [
+            { id: "rev_1", productId: "g_cincin_1", rating: 5, comment: "Keindahan pengerjaan tempaannya sangat luar biasa. Kemasan asuransi sangat kokoh!", userName: "Putri Ningsih" }
+        ];
+
+        let activeRole = "buyer"; // buyer, staff, admin
+        let activeBuyerTab = "buyer-store"; // buyer-store, buyer-history
+        let selectedCategory = "Semua";
+        let searchQuery = "";
+
+        const CATEGORIES_LIST = [
+            "Semua", "Cincin Emas", "Kalung Emas", "Gelang Emas", "Anting Emas", "Liontin Emas", "Emas Batangan", "Perhiasan Anak", "Perhiasan Custom"
+        ];
+
+        // LIFE-CYCLE INITIALIZATION
+        window.onload = function() {
+            lucide.createIcons();
+            syncCurrentUserUI();
+            renderCategories();
+            renderGoldPriceHistoryChart();
+            renderBuyerStore();
+            syncCartBadge();
+            renderFooterCategories();
+        };
+
+        function saveToStorage() {
+            localStorage.setItem('kencana_products', JSON.stringify(products));
+            localStorage.setItem('kencana_orders', JSON.stringify(orders));
+            localStorage.setItem('kencana_reviews', JSON.stringify(reviews));
+            localStorage.setItem('kencana_users', JSON.stringify(users));
+            localStorage.setItem('kencana_logged_user', JSON.stringify(currentUser));
+        }
+
+        // CUSTOM TOAST NOTIFICATION SYSTEM
+        function showToast(message, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toastId = 'toast_' + Math.random().toString(36).substring(2, 9);
+            
+            let borderClass = "border-emerald-100";
+            let iconMarkup = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>`;
+            if (type === "error") {
+                borderClass = "border-rose-100";
+                iconMarkup = `<i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>`;
+            }
+
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `p-4 rounded-2xl border bg-white shadow-xl flex items-start gap-3 transition-all duration-300 transform translate-y-2 opacity-0 ${borderClass}`;
+            toast.innerHTML = `
+                <div class="flex-shrink-0">${iconMarkup}</div>
+                <div class="flex-grow">
+                    <p class="text-xs font-semibold leading-relaxed text-stone-800">${message}</p>
+                </div>
+                <button onclick="dismissToast('${toastId}')" class="flex-shrink-0 text-stone-400 hover:text-stone-800">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                dismissToast(toastId);
+            }, 4500);
+        }
+
+        function dismissToast(id) {
+            const toast = document.getElementById(id);
+            if (toast) {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+        }
+
+        // DYNAMIC GOLD PRICE FORMULA CALCULATOR
+        function getGramRateForPurity(purity) {
+            if (purity === "24K") return goldBaseRate24k; // 100%
+            if (purity === "22K") return Math.round(goldBaseRate24k * 0.916); // 91.6%
+            if (purity === "18K") return Math.round(goldBaseRate24k * 0.75); // 75.0%
+            return goldBaseRate24k;
+        }
+
+        function getCalculatedPrice(p) {
+            const gramRate = getGramRateForPurity(p.purity);
+            return Math.round((p.weight * gramRate) + p.craftFee);
+        }
+
+        function renderGoldPriceHistoryChart() {
+            const chart = document.getElementById('gold-price-bar-chart');
+            const labels = document.getElementById('gold-price-chart-labels');
+            
+            // Render Ticker Header Box rate
+            document.getElementById('ticker-rate-24k').innerText = `Rp ${getGramRateForPurity("24K").toLocaleString('id-ID')}`;
+            document.getElementById('ticker-rate-22k').innerText = `Rp ${getGramRateForPurity("22K").toLocaleString('id-ID')}`;
+            document.getElementById('ticker-rate-18k').innerText = `Rp ${getGramRateForPurity("18K").toLocaleString('id-ID')}`;
+
+            // Adjust last historical element to fit current live goldBaseRate
+            goldPriceHistory[goldPriceHistory.length - 1].rate = goldBaseRate24k;
+
+            const maxRate = Math.max(...goldPriceHistory.map(h => h.rate));
+            const minRate = Math.min(...goldPriceHistory.map(h => h.rate));
+            const delta = maxRate - minRate || 1;
+
+            let barHtml = "";
+            let labelHtml = "";
+
+            goldPriceHistory.forEach((h) => {
+                // calculate height scale ratio
+                const percentage = ((h.rate - minRate) / delta) * 70 + 30; // Min height is 30%
+                const isLatest = h.date === "25 Jun";
+                
+                barHtml += `
+                    <div class="flex-grow flex flex-col items-center group cursor-pointer h-full justify-end">
+                        <div class="text-[9px] font-bold text-stone-600 mb-1 opacity-0 group-hover:opacity-100 transition-opacity bg-stone-900 text-white px-2 py-0.5 rounded shadow">
+                            Rp ${h.rate.toLocaleString('id-ID')}
+                        </div>
+                        <div class="w-8 rounded-t-lg transition-all duration-500 ${isLatest ? 'bg-gradient-to-t from-maroon-800 to-gold-500' : 'bg-stone-300 hover:bg-maroon-700'}" style="height: ${percentage}%;"></div>
+                    </div>
+                `;
+
+                labelHtml += `
+                    <span class="w-12 text-center ${isLatest ? 'text-maroon-800 font-extrabold' : 'text-stone-400'}">${h.date}</span>
+                `;
+            });
+
+            chart.innerHTML = barHtml;
+            labels.innerHTML = labelHtml;
+        }
+
+        // ROLE SWITCHER HUB (CUSTOMER, STAFF, ADMIN)
+        function switchRole(role) {
+            activeRole = role;
+            
+            const moduleBuyer = document.getElementById('module-buyer');
+            const moduleStaff = document.getElementById('module-staff');
+            const moduleAdmin = document.getElementById('module-admin');
+
+            const buyerControls = document.getElementById('buyer-header-controls');
+            const staffControls = document.getElementById('staff-header-controls');
+            const adminControls = document.getElementById('admin-header-controls');
+            const searchBar = document.getElementById('header-search-bar');
+
+            const btnBuyer = document.getElementById('btn-role-buyer');
+            const btnStaff = document.getElementById('btn-role-staff');
+            const btnAdmin = document.getElementById('btn-role-admin');
+
+            [btnBuyer, btnStaff, btnAdmin].forEach(btn => {
+                btn.className = "px-3 py-1 rounded bg-stone-850 hover:bg-stone-750 hover:text-white font-bold text-stone-300 transition-all flex items-center gap-1";
+            });
+
+            if (role === 'buyer') {
+                moduleBuyer.classList.remove('hidden');
+                moduleStaff.classList.add('hidden');
+                moduleAdmin.classList.add('hidden');
+                
+                buyerControls.classList.remove('hidden');
+                buyerControls.classList.add('flex');
+                staffControls.classList.add('hidden');
+                staffControls.classList.remove('flex');
+                adminControls.classList.add('hidden');
+                adminControls.classList.remove('flex');
+                searchBar.classList.remove('hidden');
+
+                btnBuyer.className = "px-3 py-1 rounded bg-maroon-800 text-white font-bold transition-all flex items-center gap-1 shadow-sm";
+                document.getElementById('current-user-tag').innerText = "Pelanggan Aktif";
+                renderBuyerStore();
+            } else if (role === 'staff') {
+                moduleBuyer.classList.add('hidden');
+                moduleStaff.classList.remove('hidden');
+                moduleAdmin.classList.add('hidden');
+
+                buyerControls.classList.add('hidden');
+                buyerControls.classList.remove('flex');
+                staffControls.classList.remove('hidden');
+                staffControls.classList.add('flex');
+                adminControls.classList.add('hidden');
+                adminControls.classList.remove('flex');
+                searchBar.classList.add('hidden');
+
+                btnStaff.className = "px-3 py-1 rounded bg-maroon-800 text-white font-bold transition-all flex items-center gap-1 shadow-sm";
+                document.getElementById('current-user-tag').innerText = "Staff: Anita Permata";
+                
+                // Prefill the gold base input inside staff
+                document.getElementById('staff-gold-rate-input').value = goldBaseRate24k;
+                renderStaffDashboard();
+            } else if (role === 'admin') {
+                moduleBuyer.classList.add('hidden');
+                moduleStaff.classList.add('hidden');
+                moduleAdmin.classList.remove('hidden');
+
+                buyerControls.classList.add('hidden');
+                buyerControls.classList.remove('flex');
+                staffControls.classList.add('hidden');
+                staffControls.classList.remove('flex');
+                adminControls.classList.remove('hidden');
+                adminControls.classList.add('flex');
+                searchBar.classList.add('hidden');
+
+                btnAdmin.className = "px-3 py-1 rounded bg-maroon-800 text-white font-bold transition-all flex items-center gap-1 shadow-sm";
+                document.getElementById('current-user-tag').innerText = "Super Administrator";
+                renderAdminWorkspace();
+            }
+
+            lucide.createIcons();
+            showToast(`Uji Coba Simulator: Peran ${role.toUpperCase()} Aktif`, "success");
+        }
+
+        // TAB NAVIGATION SWITCHER
+        function switchTab(tabId) {
+            const storeTab = document.getElementById('buyer-store-tab');
+            const historyTab = document.getElementById('buyer-history-tab');
+
+            if (tabId === 'buyer-store') {
+                storeTab.classList.remove('hidden');
+                historyTab.classList.add('hidden');
+                renderBuyerStore();
+            } else if (tabId === 'buyer-history') {
+                storeTab.classList.add('hidden');
+                historyTab.classList.remove('hidden');
+                renderBuyerHistory();
+            }
+        }
+
+        // SIMULATED AUTH SYSTEM
+        function openAuthModal() {
+            switchAuthScreen('login');
+            openModal('auth-modal');
+        }
+
+        function switchAuthScreen(screen) {
+            document.getElementById('auth-screen-login').classList.add('hidden');
+            document.getElementById('auth-screen-register').classList.add('hidden');
+            document.getElementById('auth-screen-forgot').classList.add('hidden');
+
+            if (screen === 'login') {
+                document.getElementById('auth-screen-login').classList.remove('hidden');
+            } else if (screen === 'register') {
+                document.getElementById('auth-screen-register').classList.remove('hidden');
+            } else if (screen === 'forgot') {
+                document.getElementById('auth-screen-forgot').classList.remove('hidden');
+            }
+        }
+
+        function handleAuthLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+
+            const found = users.find(u => u.email === email && u.password === pass);
+            if (found) {
+                currentUser = found;
+                saveToStorage();
+                syncCurrentUserUI();
+                closeModal('auth-modal');
+                showToast(`Selamat datang kembali, ${found.name}!`, "success");
+            } else {
+                showToast("Email atau password tidak terdaftar / salah!", "error");
+            }
+        }
+
+        function handleAuthRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-password').value;
+
+            if (users.some(u => u.email === email)) {
+                showToast("Alamat email sudah terdaftar!", "error");
+                return;
+            }
+
+            const newUser = {
+                id: "u_" + Math.random().toString(36).substring(2, 9),
+                name: name,
+                email: email,
+                password: pass,
+                role: "customer"
+            };
+
+            users.push(newUser);
+            currentUser = newUser;
+            saveToStorage();
+            syncCurrentUserUI();
+            closeModal('auth-modal');
+            showToast("Registrasi Akun Kencana Berhasil!", "success");
+        }
+
+        function handleAuthForgot(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value.trim();
+            if (users.some(u => u.email === email)) {
+                showToast(`Email reset kata sandi telah dikirim ke ${email}!`, "success");
+                closeModal('auth-modal');
+            } else {
+                showToast("Email tidak terdaftar!", "error");
+            }
+        }
+
+        function syncCurrentUserUI() {
+            document.getElementById('user-display-name').innerText = currentUser.name;
+            document.getElementById('user-avatar-initial').innerText = currentUser.name.charAt(0).toUpperCase();
+            
+            if (currentUser.role === "staff") {
+                document.getElementById('staff-display-name').innerText = currentUser.name;
+                document.getElementById('staff-dashboard-profile-name').innerText = currentUser.name;
+            }
+        }
+
+        // CUSTOMER: GALLERY LAYOUT & FILTER
+        function renderCategories() {
+            const container = document.getElementById('buyer-category-filters');
+            let html = "";
+            CATEGORIES_LIST.forEach(cat => {
+                const isActive = selectedCategory === cat;
+                html += `
+                    <button onclick="filterCategory('${cat}')" class="px-5 py-2.5 rounded-xl border text-xs font-bold whitespace-nowrap transition-all ${isActive ? 'bg-maroon-800 text-white border-maroon-800 shadow-md' : 'border-stone-200 text-stone-600 bg-white hover:bg-stone-100'}">
+                        ${cat}
+                    </button>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function filterCategory(cat) {
+            selectedCategory = cat;
+            renderCategories();
+            renderBuyerStore();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val.toLowerCase().trim();
+            renderBuyerStore();
+        }
+
+        function renderBuyerStore() {
+            const grid = document.getElementById('buyer-product-grid');
+            const availableProducts = products.filter(p => p.verified === true);
+            
+            const filtered = availableProducts.filter(p => {
+                const matchesCategory = selectedCategory === "Semua" || p.category === selectedCategory;
+                const matchesSearch = p.title.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            document.getElementById('product-count-indicator').innerText = `${filtered.length} Perhiasan Menanti Anda`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto text-stone-400">
+                            <i data-lucide="gem" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-stone-800 text-sm">Logam Perhiasan Tidak Ditemukan</h4>
+                        <p class="text-xs text-stone-400 max-w-xs mx-auto font-light">Tidak ada perhiasan berkadar ini yang tersedia atau verifikasi admin sedang berjalan.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = "";
+            filtered.forEach(p => {
+                const productReviews = reviews.filter(r => r.productId === p.id);
+                const avgRating = productReviews.length > 0 ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1) : "Koleksi Baru";
+                const calculatedPrice = getCalculatedPrice(p);
+
+                html += `
+                    <div class="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                        <div class="relative overflow-hidden bg-stone-100 h-52 cursor-pointer" onclick="openProductDetail('${p.id}')">
+                            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/500x500/800020/db9d34?text=Kencana+Aurum'">
+                            <span class="absolute top-3 left-3 bg-white/95 text-maroon-800 font-bold text-[8px] tracking-wider uppercase px-2.5 py-1 rounded-lg shadow-sm border border-stone-100">${p.category}</span>
+                            <span class="absolute bottom-3 right-3 bg-stone-900/80 backdrop-blur-sm text-gold-400 font-bold text-[9px] px-2.5 py-1 rounded-lg flex items-center gap-1">
+                                <i data-lucide="star" class="w-3 h-3 fill-current"></i> ${avgRating}
+                            </span>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center text-[9px] text-stone-400 font-bold">
+                                    <span>${p.weight.toFixed(2)} GRAM • ${p.purity} GOLD</span>
+                                </div>
+                                <h4 class="font-serif font-bold text-stone-900 group-hover:text-maroon-800 transition-colors text-sm line-clamp-1 cursor-pointer" onclick="openProductDetail('${p.id}')">${p.title}</h4>
+                                <p class="text-[11px] text-stone-500 line-clamp-2 leading-relaxed font-light pt-0.5">${p.description}</p>
+                            </div>
+
+                            <div class="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                                <div class="text-left">
+                                    <span class="block text-[8px] text-stone-400 uppercase font-bold">Harga Emas+Ongkos</span>
+                                    <span class="font-extrabold text-maroon-800 text-sm">Rp ${calculatedPrice.toLocaleString('id-ID')}</span>
+                                </div>
+                                <button onclick="addToCart('${p.id}')" class="px-4 py-2.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white text-[10px] font-extrabold uppercase tracking-wider transition-all shadow flex items-center gap-1">
+                                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Ambil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function openProductDetail(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            const calculatedPrice = getCalculatedPrice(p);
+
+            document.getElementById('detail-title').innerText = p.title;
+            document.getElementById('detail-category-badge').innerText = p.category;
+            document.getElementById('detail-purity').innerText = `${p.purity} (Kadar Kemurnian: ${p.purity === "24K" ? "99.9%" : p.purity === "22K" ? "91.6%" : "75.0%"})`;
+            document.getElementById('detail-weight').innerText = `${p.weight.toFixed(2)} Gram`;
+            document.getElementById('detail-price').innerText = `Rp ${calculatedPrice.toLocaleString('id-ID')}`;
+            document.getElementById('detail-stock').innerText = p.stock;
+            document.getElementById('detail-description').innerText = p.description;
+            
+            const detailImg = document.getElementById('detail-image');
+            detailImg.src = p.image;
+            detailImg.onerror = function() {
+                this.src = "https://placehold.co/500x500/800020/db9d34?text=Kencana+Aurum";
+            };
+
+            const reviewContainer = document.getElementById('detail-reviews-list');
+            const productReviews = reviews.filter(r => r.productId === p.id);
+            
+            if (productReviews.length === 0) {
+                reviewContainer.innerHTML = `<p class="text-[10px] text-stone-400 italic">Belum ada ulasan untuk perhiasan emas murni ini.</p>`;
+            } else {
+                let rHtml = "";
+                productReviews.forEach(r => {
+                    let stars = "";
+                    for(let i=0; i<r.rating; i++) stars += "★";
+                    rHtml += `
+                        <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-200/60">
+                            <div class="flex justify-between items-center text-[9px]">
+                                <span class="font-bold text-stone-800">${r.userName}</span>
+                                <span class="text-amber-500 font-bold">${stars}</span>
+                            </div>
+                            <p class="text-[10px] text-stone-600 mt-0.5 leading-relaxed font-light">${r.comment}</p>
+                        </div>
+                    `;
+                });
+                reviewContainer.innerHTML = rHtml;
+            }
+
+            const btnCart = document.getElementById('btn-add-to-cart');
+            btnCart.onclick = function() {
+                addToCart(p.id);
+                closeModal('product-detail-modal');
+            };
+
+            openModal('product-detail-modal');
+        }
+
+        function addToCart(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            if (p.stock <= 0) {
+                showToast("Maaf, stok perhiasan emas ini sedang kosong!", "error");
+                return;
+            }
+
+            const existing = cart.find(c => c.productId === id);
+            if (existing) {
+                if (existing.quantity >= p.stock) {
+                    showToast(`Batas limit stok tercapai (${p.stock} item)`, "error");
+                    return;
+                }
+                existing.quantity += 1;
+            } else {
+                cart.push({
+                    productId: p.id,
+                    title: p.title,
+                    price: getCalculatedPrice(p),
+                    weight: p.weight,
+                    purity: p.purity,
+                    quantity: 1,
+                    image: p.image
+                });
+            }
+
+            syncCartBadge();
+            showToast(`"${p.title}" dimasukkan ke tas belanja`, "success");
+        }
+
+        function syncCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalItems;
+        }
+
+        function openCart() {
+            const container = document.getElementById('cart-items-container');
+            const drawer = document.getElementById('cart-drawer');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="py-16 text-center space-y-3">
+                        <i data-lucide="gem" class="w-10 h-10 text-stone-300 mx-auto"></i>
+                        <p class="text-xs text-stone-400 font-light">Tas belanja perhiasan Anda masih kosong.</p>
+                    </div>
+                `;
+                document.getElementById('cart-total-price').innerText = "Rp 0";
+                document.getElementById('btn-checkout-trigger').disabled = true;
+                document.getElementById('btn-checkout-trigger').className = "w-full py-3.5 rounded-xl bg-stone-200 text-stone-400 text-xs font-bold cursor-not-allowed block text-center uppercase";
+            } else {
+                let html = "";
+                let grandTotal = 0;
+                cart.forEach((item, index) => {
+                    const linePrice = item.price * item.quantity;
+                    grandTotal += linePrice;
+
+                    html += `
+                        <div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl border border-stone-200/60">
+                            <img src="${item.image}" alt="${item.title}" class="w-12 h-12 rounded-lg object-cover bg-stone-150 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/800020/db9d34?text=Kencana'">
+                            <div class="flex-grow min-w-0">
+                                <h4 class="text-xs font-bold text-stone-850 truncate leading-snug">${item.title}</h4>
+                                <p class="text-[9px] text-stone-400 font-semibold">${item.weight}g • ${item.purity}</p>
+                                <p class="text-[10px] text-maroon-800 font-extrabold mt-0.5">Rp ${item.price.toLocaleString('id-ID')}</p>
+                                <div class="flex items-center gap-2 mt-1.5">
+                                    <button onclick="updateCartQuantity(${index}, -1)" class="w-5 h-5 rounded bg-stone-200 hover:bg-stone-300 flex items-center justify-center text-xs font-bold text-stone-700">-</button>
+                                    <span class="text-xs font-bold text-stone-800">${item.quantity}</span>
+                                    <button onclick="updateCartQuantity(${index}, 1)" class="w-5 h-5 rounded bg-stone-200 hover:bg-stone-300 flex items-center justify-center text-xs font-bold text-stone-700">+</button>
+                                </div>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="text-stone-400 hover:text-rose-600 p-1 flex-shrink-0" title="Hapus">
+                                <i data-lucide="trash" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                document.getElementById('cart-total-price').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+                document.getElementById('btn-checkout-trigger').disabled = false;
+                document.getElementById('btn-checkout-trigger').className = "w-full py-3.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white text-xs font-bold transition-all shadow block text-center uppercase tracking-wider cursor-pointer";
+            }
+
+            drawer.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeCart() {
+            document.getElementById('cart-drawer').classList.add('hidden');
+        }
+
+        function updateCartQuantity(index, modifier) {
+            const item = cart[index];
+            const p = products.find(prod => prod.id === item.productId);
+            
+            if (modifier > 0 && item.quantity >= p.stock) {
+                showToast("Maaf, stok yang tersedia tidak mencukupi.", "error");
+                return;
+            }
+
+            item.quantity += modifier;
+            if (item.quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            syncCartBadge();
+            openCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            syncCartBadge();
+            openCart();
+            showToast("Perhiasan dikeluarkan dari tas belanja", "success");
+        }
+
+        // SECURE CHECKOUT
+        function openCheckoutModal() {
+            closeCart();
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const grandTotal = subtotal + 45000; // Flat safety gold courier fee
+            document.getElementById('checkout-grand-total').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+            
+            // prefill address if customer logged in
+            document.getElementById('checkout-address').value = currentUser.id === "u_01" ? "Jl. Sudirman No.10, Medan Kota" : "";
+            openModal('checkout-modal');
+        }
+
+        function handleCheckout(e) {
+            e.preventDefault();
+            const address = document.getElementById('checkout-address').value.trim();
+            const payment = document.getElementById('checkout-payment').value;
+
+            if (cart.length === 0) return;
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const ongkir = 45000;
+            const grandTotal = subtotal + ongkir;
+
+            // Reduce stocks & validation
+            let stockError = false;
+            cart.forEach(item => {
+                const prod = products.find(p => p.id === item.productId);
+                if (prod) {
+                    if (prod.stock < item.quantity) {
+                        showToast(`Stok "${prod.title}" tidak mencukupi!`, "error");
+                        stockError = true;
+                    }
+                }
+            });
+
+            if (stockError) return;
+
+            cart.forEach(item => {
+                const prod = products.find(p => p.id === item.productId);
+                if (prod) prod.stock -= item.quantity;
+            });
+
+            const newOrderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+            const newOrderObj = {
+                id: newOrderId,
+                buyerId: currentUser.id,
+                buyerName: currentUser.name,
+                buyerAddress: address,
+                items: [...cart],
+                subtotal: subtotal,
+                ongkir: ongkir,
+                total: grandTotal,
+                paymentMethod: payment,
+                status: "Pending", // Pending -> Diproses -> Dikirim -> Selesai
+                date: "25 Juni 2026",
+            };
+
+            orders.unshift(newOrderObj);
+            saveToStorage();
+
+            cart = [];
+            syncCartBadge();
+            
+            closeModal('checkout-modal');
+            showToast(`Terima kasih! Pesanan proteksi ${newOrderId} berhasil dibuat.`, "success");
+            switchTab('buyer-history');
+        }
+
+        // HISTORI PEMBELIAN PELANGGAN
+        function renderBuyerHistory() {
+            const list = document.getElementById('buyer-history-list');
+            const buyerOrders = orders.filter(o => o.buyerId === currentUser.id);
+
+            if (buyerOrders.length === 0) {
+                list.innerHTML = `
+                    <div class="bg-white p-12 text-center rounded-3xl border border-stone-200 shadow-sm space-y-3">
+                        <i data-lucide="receipt" class="w-12 h-12 text-stone-300 mx-auto"></i>
+                        <h4 class="font-bold text-stone-850 text-sm">Belum Ada Transaksi Emas</h4>
+                        <p class="text-xs text-stone-400 font-light max-w-xs mx-auto">Anda belum pernah melakukan pemesanan perhiasan di butik Kencana Aurum.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = "";
+            buyerOrders.forEach(o => {
+                let statusBadge = "";
+                if (o.status === "Pending") statusBadge = `<span class="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold px-3 py-1 rounded-lg">Menunggu Verifikasi Staff</span>`;
+                else if (o.status === "Diproses") statusBadge = `<span class="bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold px-3 py-1 rounded-lg">Proteksi Sedang Dipersiapkan</span>`;
+                else if (o.status === "Dikirim") statusBadge = `<span class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-lg">Kurir Khusus Dikirim</span>`;
+                else if (o.status === "Selesai") statusBadge = `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-3 py-1 rounded-lg">Emas Diterima & Selesai</span>`;
+
+                let actionButton = "";
+                if (o.status === "Dikirim") {
+                    actionButton = `<button onclick="confirmOrderReceived('${o.id}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow">Konfirmasi Selesai</button>`;
+                } else if (o.status === "Selesai") {
+                    const targetProductId = o.items[0].productId;
+                    const alreadyReviewed = reviews.find(r => r.productId === targetProductId && r.userName === currentUser.name);
+                    if (!alreadyReviewed) {
+                        actionButton = `<button onclick="openReviewModal('${o.id}', '${targetProductId}')" class="px-4 py-2 bg-maroon-800 hover:bg-maroon-900 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow">Ulas Perhiasan</button>`;
+                    } else {
+                        actionButton = `<span class="text-[10px] text-stone-400 font-semibold italic">Ulasan Telah Dikirim</span>`;
+                    }
+                }
+
+                let itemsHtml = "";
+                o.items.forEach(it => {
+                    itemsHtml += `
+                        <div class="flex items-center gap-3.5 py-2.5">
+                            <img src="${it.image}" class="w-11 h-11 rounded-lg object-cover bg-stone-100 border border-stone-200" onerror="this.onerror=null; this.src='https://placehold.co/100x100/800020/db9d34?text=Kencana'">
+                            <div>
+                                <h5 class="text-xs font-bold text-stone-850 leading-snug">${it.title}</h5>
+                                <p class="text-[10px] text-stone-500 font-semibold">${it.quantity} unit x Rp ${it.price.toLocaleString('id-ID')}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-stone-100 pb-3 gap-2">
+                            <div>
+                                <span class="text-[10px] text-stone-400 font-bold block">${o.date}</span>
+                                <span class="text-xs font-extrabold text-stone-900 font-mono">${o.id}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${statusBadge}
+                            </div>
+                        </div>
+
+                        <div class="divide-y divide-stone-100">
+                            ${itemsHtml}
+                        </div>
+
+                        <div class="bg-stone-50 p-3.5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center border border-stone-200/50 gap-4">
+                            <div>
+                                <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Alamat Pengiriman Aman</span>
+                                <p class="text-xs text-stone-600 font-medium leading-relaxed max-w-md">${o.buyerAddress}</p>
+                                <span class="block text-[10px] text-stone-500 font-bold mt-1">Sistem Proteksi: ${o.paymentMethod}</span>
+                            </div>
+                            <div class="text-left sm:text-right flex-shrink-0">
+                                <span class="text-[9px] text-stone-400 font-bold uppercase block">Nilai Transaksi</span>
+                                <span class="text-base font-extrabold text-maroon-800 block">Rp ${o.total.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-1">
+                            ${actionButton}
+                        </div>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function confirmOrderReceived(orderId) {
+            const o = orders.find(item => item.id === orderId);
+            if (o) {
+                o.status = "Selesai";
+                saveToStorage();
+                renderBuyerHistory();
+                showToast(`Penerimaan produk ${orderId} terkonfirmasi! Terima kasih atas kepercayaannya.`, "success");
+            }
+        }
+
+        // STARS REVIEW GENERATOR
+        function openReviewModal(orderId, productId) {
+            document.getElementById('review-product-id').value = productId;
+            document.getElementById('review-order-id').value = orderId;
+            document.getElementById('review-comment').value = "";
+            renderStarPicker(5); 
+            openModal('review-modal');
+        }
+
+        let selectedRatingVal = 5;
+        function renderStarPicker(val) {
+            selectedRatingVal = val;
+            const container = document.getElementById('star-picker-container');
+            let stars = "";
+            for (let i = 1; i <= 5; i++) {
+                const active = i <= val;
+                stars += `
+                    <button type="button" onclick="renderStarPicker(${i})" class="text-2xl transition-transform hover:scale-115">
+                        <span class="${active ? 'text-amber-500' : 'text-stone-300'}">★</span>
+                    </button>
+                `;
+            }
+            container.innerHTML = stars;
+        }
+
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            const pId = document.getElementById('review-product-id').value;
+            const oId = document.getElementById('review-order-id').value;
+            const comment = document.getElementById('review-comment').value.trim();
+
+            const newRev = {
+                id: "rev_" + Math.random().toString(36).substring(2, 9),
+                productId: pId,
+                rating: selectedRatingVal,
+                comment: comment,
+                userName: currentUser.name
+            };
+
+            reviews.push(newRev);
+            saveToStorage();
+            closeModal('review-modal');
+            showToast("Review perhiasan terkirim! Masukan Anda sangat dihargai.", "success");
+            renderBuyerHistory();
+        }
+
+        // ==============================================
+        // STAFF TOKO OPERATIONS & ACTIONS
+        // ==============================================
+        function renderStaffDashboard() {
+            // Metrics Calculations
+            const staffProducts = products;
+            const staffOrders = orders;
+            
+            const pendingVerifyCount = staffProducts.filter(p => !p.verified).length;
+            const activeOrdersCount = staffOrders.filter(o => o.status === "Pending" || o.status === "Diproses" || o.status === "Dikirim").length;
+            
+            const completedOrders = staffOrders.filter(o => o.status === "Selesai");
+            const totalRevenue = completedOrders.reduce((sum, o) => sum + o.subtotal, 0);
+            
+            // Total Weight Gram Sold
+            const totalWeightUnits = completedOrders.reduce((sum, o) => {
+                const grams = o.items.reduce((s, it) => s + (it.weight * it.quantity), 0);
+                return sum + grams;
+            }, 0);
+
+            // Update Metrics Card
+            document.getElementById('stat-staff-revenue').innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+            document.getElementById('stat-staff-sold').innerText = `${totalWeightUnits.toFixed(2)} Gram`;
+            document.getElementById('stat-staff-products').innerText = `${staffProducts.length} Item`;
+            document.getElementById('stat-staff-pending-product').innerText = `${pendingVerifyCount}`;
+            document.getElementById('stat-staff-active-orders').innerText = `${activeOrdersCount} Pesanan`;
+
+            // Report values
+            document.getElementById('report-daily').innerText = `Rp ${(totalRevenue * 0.3).toLocaleString('id-ID')}`;
+            document.getElementById('report-monthly').innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+
+            renderStaffProducts(staffProducts);
+            renderStaffOrders(staffOrders);
+        }
+
+        function handleStaffGoldUpdate(e) {
+            e.preventDefault();
+            const newRate = parseInt(document.getElementById('staff-gold-rate-input').value);
+            if (newRate && newRate > 0) {
+                goldBaseRate24k = newRate;
+                localStorage.setItem('kencana_gold_base', goldBaseRate24k);
+                
+                // update local gold price history
+                goldPriceHistory[goldPriceHistory.length - 1].rate = goldBaseRate24k;
+                
+                renderGoldPriceHistoryChart();
+                renderStaffDashboard();
+                showToast(`Pembaruan Sukses! Kurs Emas 24K disesuaikan ke Rp ${newRate.toLocaleString('id-ID')}/g. Seluruh harga perhiasan ter-update otomatis.`, "success");
+            }
+        }
+
+        function renderStaffProducts(productList) {
+            const container = document.getElementById('staff-product-list');
+            if (productList.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-400 italic py-6 text-center">Belum ada katalog emas di butik.</p>`;
+                return;
+            }
+
+            let html = "";
+            productList.forEach(p => {
+                const statusTag = p.verified ? 
+                    `<span class="bg-emerald-50 text-emerald-700 text-[9px] px-2 py-0.5 rounded border border-emerald-100 font-bold uppercase">Siap Jual</span>` : 
+                    `<span class="bg-amber-50 text-amber-700 text-[9px] px-2 py-0.5 rounded border border-amber-100 font-bold uppercase animate-pulse">Menunggu Verifikasi Admin</span>`;
+                
+                const calculatedPrice = getCalculatedPrice(p);
+
+                html += `
+                    <div class="bg-white p-4 rounded-2xl border border-stone-200/80 shadow-sm flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <img src="${p.image}" class="w-12 h-12 rounded-lg object-cover bg-stone-100 border border-stone-200 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/800020/db9d34?text=Kencana'">
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-bold text-stone-900 truncate leading-snug">${p.title}</h4>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="text-[9px] text-stone-400 font-bold uppercase">Kategori: ${p.category}</span>
+                                    <span class="text-[9px] text-stone-400 font-semibold">|</span>
+                                    <span class="text-[9px] text-stone-800 font-extrabold">Stok: ${p.stock} pcs</span>
+                                    <span class="text-[9px] text-stone-400 font-semibold">|</span>
+                                    <span class="text-[9px] text-gold-600 font-extrabold">${p.weight}g (${p.purity})</span>
+                                </div>
+                                <span class="block text-xs font-extrabold text-maroon-800 mt-1">Estimasi Jual: Rp ${calculatedPrice.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2 flex-shrink-0">
+                            ${statusTag}
+                            <div class="flex gap-1">
+                                <button onclick="editProductByStaff('${p.id}')" class="p-1.5 rounded-lg bg-stone-100 text-stone-600 hover:bg-gold-100 hover:text-gold-700 transition-colors" title="Edit Perhiasan">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="deleteProductByStaff('${p.id}')" class="text-stone-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-stone-50" title="Hapus">
+                                    <i data-lucide="trash" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function renderStaffOrders(orderList) {
+            const container = document.getElementById('staff-orders-list');
+            const activeIncoming = orderList.filter(o => o.status !== "Selesai");
+
+            if (activeIncoming.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-8 text-center rounded-3xl border border-stone-200/60 shadow-sm">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-stone-300 mx-auto mb-2"></i>
+                        <p class="text-xs text-stone-400 font-light">Semua pengiriman pesanan emas selesai dikonfirmasi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = "";
+            activeIncoming.forEach(o => {
+                let actionBtn = "";
+                let stepTitle = "";
+
+                if (o.status === "Pending") {
+                    stepTitle = "Baru Masuk";
+                    actionBtn = `<button onclick="updateOrderStatus('${o.id}', 'Diproses')" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow">Kemasi Asuransi Safepack</button>`;
+                } else if (o.status === "Diproses") {
+                    stepTitle = "Sedang Dikemas";
+                    actionBtn = `<button onclick="updateOrderStatus('${o.id}', 'Dikirim')" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow">Kirim Kurir Khusus</button>`;
+                } else if (o.status === "Dikirim") {
+                    stepTitle = "Menuju Tujuan";
+                    actionBtn = `<span class="text-[10px] text-stone-400 font-semibold italic block text-center py-2 bg-stone-100 rounded-lg">Menunggu tanda terima pelanggan</span>`;
+                }
+
+                let productsDetails = "";
+                o.items.forEach(it => {
+                    productsDetails += `<span class="block text-[11px] text-stone-600 font-medium">• ${it.title} (x${it.quantity}) [${it.weight}g ${it.purity}]</span>`;
+                });
+
+                html += `
+                    <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-3.5">
+                        <div class="flex justify-between items-center border-b border-stone-100 pb-2">
+                            <span class="text-[10px] font-bold text-stone-400 uppercase">Order ID: <strong class="text-stone-800 font-mono">${o.id}</strong></span>
+                            <span class="bg-amber-50 text-amber-700 text-[9px] px-2.5 py-0.5 rounded border border-amber-200 font-bold uppercase">${stepTitle}</span>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[9px] text-stone-400 font-bold uppercase tracking-wider block">Logam Terkait</span>
+                            ${productsDetails}
+                        </div>
+                        <div class="text-xs border-t border-stone-50 pt-2 text-stone-500 font-light leading-relaxed">
+                            Penerima: <strong class="text-stone-800 font-semibold">${o.buyerName}</strong> <br>
+                            Tujuan: ${o.buyerAddress}
+                        </div>
+                        <div class="pt-2 border-t border-stone-100">
+                            ${actionBtn}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const o = orders.find(item => item.id === orderId);
+            if (o) {
+                o.status = newStatus;
+                saveToStorage();
+                renderStaffDashboard();
+                showToast(`Pesanan ${orderId} berhasil diupdate ke status "${newStatus}"!`, "success");
+            }
+        }
+
+        function openAddProductModal() {
+            document.getElementById('form-product-modal-title').innerText = "Daftarkan Perhiasan Baru";
+            document.getElementById('form-product-id').value = "";
+            document.getElementById('add-p-title').value = "";
+            document.getElementById('add-p-category').value = "Cincin Emas";
+            document.getElementById('add-p-stock').value = "";
+            document.getElementById('add-p-weight').value = "";
+            document.getElementById('add-p-purity').value = "24K";
+            document.getElementById('add-p-craft-fee').value = "";
+            document.getElementById('add-p-description').value = "";
+            openModal('add-product-modal');
+        }
+
+        function editProductByStaff(prodId) {
+            const p = products.find(item => item.id === prodId);
+            if (!p) return;
+
+            document.getElementById('form-product-modal-title').innerText = "Ubah Detail Perhiasan";
+            document.getElementById('form-product-id').value = p.id;
+            document.getElementById('add-p-title').value = p.title;
+            document.getElementById('add-p-category').value = p.category;
+            document.getElementById('add-p-stock').value = p.stock;
+            document.getElementById('add-p-weight').value = p.weight;
+            document.getElementById('add-p-purity').value = p.purity;
+            document.getElementById('add-p-craft-fee').value = p.craftFee;
+            document.getElementById('add-p-description').value = p.description;
+            document.getElementById('add-p-image').value = p.image;
+            openModal('add-product-modal');
+        }
+
+        function handleProductFormSubmit(e) {
+            e.preventDefault();
+            const prodId = document.getElementById('form-product-id').value;
+            const title = document.getElementById('add-p-title').value.trim();
+            const category = document.getElementById('add-p-category').value;
+            const stock = parseInt(document.getElementById('add-p-stock').value);
+            const weight = parseFloat(document.getElementById('add-p-weight').value);
+            const purity = document.getElementById('add-p-purity').value;
+            const craftFee = parseInt(document.getElementById('add-p-craft-fee').value);
+            const image = document.getElementById('add-p-image').value;
+            const desc = document.getElementById('add-p-description').value.trim();
+
+            if (prodId) {
+                // Edit existing
+                const existing = products.find(p => p.id === prodId);
+                if (existing) {
+                    existing.title = title;
+                    existing.category = category;
+                    existing.stock = stock;
+                    existing.weight = weight;
+                    existing.purity = purity;
+                    existing.craftFee = craftFee;
+                    existing.image = image;
+                    existing.description = desc;
+                    showToast(`"${title}" berhasil diperbarui!`, "success");
+                }
+            } else {
+                // Create new submission (pending verification by admin)
+                const newProd = {
+                    id: "g_prod_" + Math.random().toString(36).substring(2, 9),
+                    title: title,
+                    category: category,
+                    price: 0, // dynamic
+                    weight: weight,
+                    purity: purity,
+                    craftFee: craftFee,
+                    stock: stock,
+                    image: image,
+                    description: desc,
+                    verified: false // Admin must verify!
+                };
+                products.unshift(newProd);
+                showToast(`"${title}" diajukan! Menunggu peninjauan Admin untuk penayangan butik.`, "success");
+            }
+
+            saveToStorage();
+            closeModal('add-product-modal');
+            renderStaffDashboard();
+        }
+
+        function deleteProductByStaff(prodId) {
+            const idx = products.findIndex(p => p.id === prodId);
+            if (idx !== -1) {
+                const deletedName = products[idx].title;
+                products.splice(idx, 1);
+                saveToStorage();
+                renderStaffDashboard();
+                showToast(`"${deletedName}" dihapus dari sistem.`, "success");
+            }
+        }
+
+        // ==============================================
+        // SUPER ADMIN CORE ACTIONS
+        // ==============================================
+        function renderAdminWorkspace() {
+            const pendingProducts = products.filter(p => !p.verified);
+            
+            // Stats
+            document.getElementById('admin-stat-users').innerText = `${users.length} Akun`;
+            document.getElementById('admin-stat-pending').innerText = `${pendingProducts.length} Item`;
+            document.getElementById('admin-pending-badge').innerText = `${pendingProducts.length} Butuh Review`;
+
+            const volumeTotal = orders.reduce((sum, o) => sum + o.total, 0);
+            document.getElementById('admin-stat-volume').innerText = `Rp ${volumeTotal.toLocaleString('id-ID')}`;
+
+            // Verification List Render
+            const verifyContainer = document.getElementById('admin-verification-list');
+            if (pendingProducts.length === 0) {
+                verifyContainer.innerHTML = `
+                    <div class="bg-white p-8 text-center rounded-3xl border border-stone-200/60 shadow-sm">
+                        <p class="text-xs text-stone-400 italic">Semua pengajuan perhiasan staff telah ditinjau.</p>
+                    </div>
+                `;
+            } else {
+                let html = "";
+                pendingProducts.forEach(p => {
+                    const estPrice = getCalculatedPrice(p);
+                    html += `
+                        <div class="bg-white p-4.5 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between gap-3">
+                            <div class="flex items-start gap-3">
+                                <img src="${p.image}" class="w-12 h-12 rounded-lg object-cover bg-stone-100 flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/800020/db9d34?text=Kencana'">
+                                <div class="min-w-0">
+                                    <h4 class="text-xs font-bold text-stone-900 leading-snug">${p.title}</h4>
+                                    <span class="text-[9px] text-stone-400 font-bold uppercase block mt-0.5">Kategori: ${p.category} | ${p.weight}g (${p.purity})</span>
+                                    <span class="text-[10px] text-maroon-800 font-extrabold block">Est. Jual: Rp ${estPrice.toLocaleString('id-ID')}</span>
+                                    <p class="text-[10px] text-stone-500 font-light line-clamp-2 mt-1 leading-relaxed">${p.description}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-2 pt-2 border-t border-stone-50">
+                                <button onclick="rejectProductByAdmin('${p.id}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-100 text-rose-700 text-[10px] font-bold rounded-lg transition-colors">Tolak</button>
+                                <button onclick="approveProductByAdmin('${p.id}')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-[10px] font-bold rounded-lg transition-colors shadow">Setujui & Tayangkan</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                verifyContainer.innerHTML = html;
+            }
+
+            // User Management List Render
+            const usersContainer = document.getElementById('admin-users-list');
+            let usersHtml = "";
+            users.forEach(u => {
+                let badgeClass = "bg-stone-100 text-stone-700";
+                if (u.role === "admin") badgeClass = "bg-purple-50 text-purple-700 border border-purple-100 font-bold";
+                else if (u.role === "staff") badgeClass = "bg-amber-50 text-amber-700 border border-amber-100 font-bold";
+
+                usersHtml += `
+                    <div class="p-4 flex justify-between items-center bg-white">
+                        <div>
+                            <h4 class="text-xs font-bold text-stone-850">${u.name}</h4>
+                            <span class="text-[10px] text-stone-400">${u.email}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[8px] px-2.5 py-1 rounded uppercase tracking-wider ${badgeClass}">${u.role}</span>
+                            ${u.role !== 'admin' ? `
+                                <button onclick="deleteUserByAdmin('${u.id}')" class="text-stone-400 hover:text-rose-600 p-1 rounded-lg" title="Hapus Akun">
+                                    <i data-lucide="user-minus" class="w-4 h-4"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            usersContainer.innerHTML = usersHtml;
+
+            // Global Transaction monitor
+            const transContainer = document.getElementById('admin-transactions-list');
+            let transHtml = "";
+            orders.forEach(o => {
+                let statusColor = "text-stone-500";
+                if (o.status === "Selesai") statusColor = "text-emerald-600";
+                else if (o.status === "Diproses") statusColor = "text-blue-600";
+                else if (o.status === "Pending") statusColor = "text-amber-500 font-bold";
+
+                transHtml += `
+                    <div class="bg-white p-4 rounded-2xl border border-stone-200/80 text-xs flex justify-between items-center gap-4 shadow-sm">
+                        <div>
+                            <span class="block text-[9px] text-stone-400 font-bold">${o.date}</span>
+                            <span class="font-bold text-stone-800">${o.id}</span>
+                            <span class="block text-[10px] text-stone-500 font-light mt-0.5">${o.buyerName} -> Butik Kencana</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-extrabold text-maroon-800">Rp ${o.total.toLocaleString('id-ID')}</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wider ${statusColor}">${o.status}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            transContainer.innerHTML = transHtml;
+
+            // Best Seller simulation list
+            const bestSellerContainer = document.getElementById('admin-best-seller-container');
+            bestSellerContainer.innerHTML = `
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between border-b border-stone-800/80 pb-1.5 text-stone-400 font-bold">
+                        <span>Nama Logam Mulia</span>
+                        <span>Total Terjual</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Cincin Emas Solitaire Royal Diamond</span>
+                        <span class="font-bold text-gold-400">1 unit</span>
+                    </div>
+                    <div class="flex justify-between text-stone-500">
+                        <span>Logam Mulia Kencana Gold Bar 24K</span>
+                        <span>0 unit</span>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        function approveProductByAdmin(prodId) {
+            const p = products.find(item => item.id === prodId);
+            if (p) {
+                p.verified = true;
+                saveToStorage();
+                renderAdminWorkspace();
+                showToast(`Produk "${p.title}" disetujui untuk dipasarkan!`, "success");
+            }
+        }
+
+        function rejectProductByAdmin(prodId) {
+            const idx = products.findIndex(item => item.id === prodId);
+            if (idx !== -1) {
+                const deletedName = products[idx].title;
+                products.splice(idx, 1);
+                saveToStorage();
+                renderAdminWorkspace();
+                showToast(`Pengajuan produk "${deletedName}" ditolak & dihapus.`, "error");
+            }
+        }
+
+        function openAddUserModal() {
+            openModal('add-user-modal');
+        }
+
+        function handleAdminAddUser(e) {
+            e.preventDefault();
+            const name = document.getElementById('admin-user-name').value.trim();
+            const email = document.getElementById('admin-user-email').value.trim();
+            const pass = document.getElementById('admin-user-password').value;
+
+            if (users.some(u => u.email === email)) {
+                showToast("Email tersebut sudah terdaftar di sistem!", "error");
+                return;
+            }
+
+            const newStaff = {
+                id: "stf_" + Math.random().toString(36).substring(2, 9),
+                name: name,
+                email: email,
+                password: pass,
+                role: "staff"
+            };
+
+            users.push(newStaff);
+            saveToStorage();
+            closeModal('add-user-modal');
+            renderAdminWorkspace();
+            showToast(`Akun Staff "${name}" berhasil didaftarkan!`, "success");
+        }
+
+        function deleteUserByAdmin(userId) {
+            const idx = users.findIndex(u => u.id === userId);
+            if (idx !== -1) {
+                const deletedName = users[idx].name;
+                users.splice(idx, 1);
+                saveToStorage();
+                renderAdminWorkspace();
+                showToast(`Akun pengguna "${deletedName}" telah dihapus.`, "success");
+            }
+        }
+
+        // FOOTER HELPER
+        function renderFooterCategories() {
+            const container = document.getElementById('footer-categories-list');
+            let html = "";
+            CATEGORIES_LIST.slice(1).forEach(cat => {
+                html += `<li><a href="#" onclick="filterCategory('${cat}'); switchRole('buyer');" class="hover:text-gold-400 transition-colors">${cat}</a></li>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // MODAL TOGGLE UTILITY
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+            lucide.createIcons();
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+    </script>
+</body>
+</html>
